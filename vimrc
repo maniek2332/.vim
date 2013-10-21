@@ -96,9 +96,8 @@ autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
 call pathogen#infect()
 
 let g:syntastic_mode_map = {'mode': 'passive'}
-let g:syntastic_enable_highlighting = 0
-let g:syntastic_python_checker = 'flake8'
-let g:syntastic_python_checker_args = '--ignore=E124,E127,W391'
+let g:syntastic_python_checkers = ['flake8']
+let g:syntastic_python_flake8_args = '--ignore=E124,E127,W391'
 
 """" Python specific
 
@@ -125,6 +124,7 @@ command! -range Pyx python PyExecReplace(<f-line1>,<f-line2>)
 
 
 "" pymode settings
+let g:pymode_lint = 0
 "let g:pymode_lint_write = 0
 "let g:pymode_utils_whitespaces = 0
 "let g:pymode_breakpoint_cmd = "import pdb; pdb.set_trace() ### XXX BREAKPOINT"
@@ -221,9 +221,9 @@ noremap gSl :source ~/.vim/session_last.vim<CR>
 
 " Error window handling
 noremap gC :SyntasticCheck<CR>
-noremap gV :lclose \| call setloclist(0, []) \| sign unplace *<CR>
+noremap gV :SyntasticReset<CR>
 noremap gc :lnext<CR>
-noremap gv :lprev<CR>
+noremap gv :lopen<CR>
 
 map gB <Leader>be
 
