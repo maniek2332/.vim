@@ -1,6 +1,32 @@
 set exrc
 set nocompatible
 set number
+
+filetype off
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+" required! 
+Bundle 'gmarik/vundle'
+Bundle 'alfredodeza/coveragepy.vim'
+Bundle 'vim-scripts/hexman.vim'
+Bundle 'alfredodeza/pytest.vim'
+Bundle 'klen/python-mode'
+Bundle 'vim-scripts/tabops'
+Bundle 'vim-scripts/Conque-Shell'
+Bundle 'vim-scripts/LargeFile'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'scrooloose/nerdtree'
+Bundle 'vim-scripts/ZoomWin'
+Bundle 'vim-scripts/bufexplorer.zip'
+Bundle 'ervandew/supertab'
+Bundle 'tpope/vim-surround'
+Bundle 'vim-scripts/taglist.vim'
+Bundle 'kien/ctrlp.vim'
+Bundle 'scrooloose/syntastic'
+
 syntax on
 
 set bs=indent,eol,start
@@ -91,9 +117,6 @@ let g:bufExplorerFindActive=0
 autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
 
 "let g:myterm="terminal -e"
-
-"" Pathogen
-call pathogen#infect()
 
 let g:syntastic_mode_map = {'mode': 'passive'}
 let g:syntastic_python_checkers = ['flake8']
@@ -223,7 +246,7 @@ noremap gSl :source ~/.vim/session_last.vim<CR>
 noremap gC :SyntasticCheck<CR>
 noremap gV :SyntasticReset<CR>
 noremap gc :lnext<CR>
-noremap gv :lopen<CR>
+noremap gv :Errors<CR>
 
 map gB <Leader>be
 

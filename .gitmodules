@@ -13,12 +13,12 @@
 [submodule "bundle/tabops"]
 	path = bundle/tabops
 	url = https://github.com/vim-scripts/tabops.git
-[submodule "bundle/conque-shell"]
-	path = bundle/conque-shell
+[submodule "bundle/Conque-Shell"]
+	path = bundle/Conque-Shell
 	url = https://github.com/vim-scripts/Conque-Shell.git
     ignore = dirty
-[submodule "bundle/large_file"]
-	path = bundle/large_file
+[submodule "bundle/LargeFile"]
+	path = bundle/LargeFile
 	url = https://github.com/vim-scripts/LargeFile.git
     ignore = dirty
 [submodule "bundle/nerdcommenter"]
@@ -27,12 +27,12 @@
 [submodule "bundle/nerdtree"]
 	path = bundle/nerdtree
 	url = https://github.com/scrooloose/nerdtree.git
-[submodule "bundle/zoomwin"]
-	path = bundle/zoomwin
+[submodule "bundle/ZoomWin"]
+	path = bundle/ZoomWin
 	url = https://github.com/vim-scripts/ZoomWin.git
     ignore = dirty
-[submodule "bundle/bufexplorer"]
-	path = bundle/bufexplorer
+[submodule "bundle/bufexplorer.zip"]
+	path = bundle/bufexplorer.zip
 	url = https://github.com/vim-scripts/bufexplorer.zip.git
     ignore = dirty
 [submodule "bundle/supertab"]
@@ -42,7 +42,7 @@
 	path = bundle/surround
 	url = https://github.com/tpope/vim-surround.git
 [submodule "bundle/taglist"]
-	path = bundle/taglist
+	path = bundle/taglist.vim
 	url = https://github.com/vim-scripts/taglist.vim.git
     ignore = dirty
 [submodule "bundle/ctrlp"]
