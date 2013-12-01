@@ -26,6 +26,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/taglist.vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
+Bundle 'Rykka/riv.vim'
 
 syntax on
 
