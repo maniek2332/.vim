@@ -27,8 +27,14 @@ Bundle 'vim-scripts/taglist.vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'Rykka/riv.vim'
+Bundle 'kien/rainbow_parentheses.vim'
 
 syntax on
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax python RainbowParenthesesLoadBraces
 
 set bs=indent,eol,start
 set wrap
@@ -150,10 +156,29 @@ command! -range Pyx python PyExecReplace(<f-line1>,<f-line2>)
 "" pymode settings
 let g:pymode_lint = 0
 "let g:pymode_lint_write = 0
-"let g:pymode_utils_whitespaces = 0
+"let g:pymode_trim_whitespaces = 0
 "let g:pymode_breakpoint_cmd = "import pdb; pdb.set_trace() ### XXX BREAKPOINT"
 "let g:pymode_breakpoint_key = "<Leader>B"
 "let g:pymode_lint_ignore = "E127,W391,E501,E502,E231,E128,W291,W293,E251,E124,E255,E122,E121,E225,E261,E262,E126,E272,E302,E222"
+
+let g:rbpt_colorpairs = [
+    \ ['red',         'firebrick3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ]
 
 ""
 
@@ -279,4 +304,6 @@ vmap <F12> :set paste!<CR>:set paste?<CR>
 cmap <F12> :set paste!<CR>:set paste?<CR>
 
 noremap <Backspace> :ZoomWin<CR>
+
+noremap <Leader>p :RainbowParenthesesToggle<CR>
 
