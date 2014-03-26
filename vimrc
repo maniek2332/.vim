@@ -28,6 +28,7 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'Rykka/riv.vim'
 Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'rking/ag.vim'
 
 syntax on
 
