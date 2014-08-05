@@ -1,5 +1,8 @@
 set exrc
 set nocompatible
+
+runtime macros/matchit.vim
+
 set number
 
 filetype off
