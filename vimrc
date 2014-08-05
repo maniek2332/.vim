@@ -24,7 +24,6 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'vim-scripts/ZoomWin'
 Bundle 'vim-scripts/bufexplorer.zip'
-Bundle 'ervandew/supertab'
 Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/taglist.vim'
 Bundle 'kien/ctrlp.vim'
@@ -32,6 +31,7 @@ Bundle 'scrooloose/syntastic'
 Bundle 'Rykka/riv.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'rking/ag.vim'
+Bundle 'Valloric/YouCompleteMe'
 
 syntax on
 
@@ -87,11 +87,8 @@ else
     colorscheme wombat256
 endif
 
-"let g:SuperTabDefaultCompletionType = "context"
-"let g:SuperTabContextDefaultCompletionType = "<c-n>"
-
 set wildmenu
-set completeopt=longest,menuone,menu,preview
+set completeopt=longest,menu
 
 set history=300
 set autoread
@@ -159,6 +156,7 @@ command! -range Pyx python PyExecReplace(<f-line1>,<f-line2>)
 
 "" pymode settings
 let g:pymode_lint = 0
+let g:pymode_options_max_line_length = 0
 "let g:pymode_lint_write = 0
 "let g:pymode_trim_whitespaces = 0
 "let g:pymode_breakpoint_cmd = "import pdb; pdb.set_trace() ### XXX BREAKPOINT"
@@ -310,4 +308,3 @@ cmap <F12> :set paste!<CR>:set paste?<CR>
 noremap <Backspace> :ZoomWin<CR>
 
 noremap <Leader>p :RainbowParenthesesToggle<CR>
-
