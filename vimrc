@@ -34,6 +34,7 @@ Bundle 'rking/ag.vim'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
+Bundle 'vim-scripts/vcscommand.vim'
 
 syntax on
 
