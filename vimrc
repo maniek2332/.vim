@@ -32,6 +32,8 @@ Bundle 'Rykka/riv.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'rking/ag.vim'
 Bundle 'Valloric/YouCompleteMe'
+Bundle 'SirVer/ultisnips'
+Bundle 'honza/vim-snippets'
 
 syntax on
 
@@ -130,6 +132,12 @@ let g:syntastic_mode_map = {'mode': 'passive'}
 let g:syntastic_python_checkers = ['flake8']
 let g:syntastic_python_flake8_args = '--ignore=E124,E127,W391'
 
+let g:UltiSnipsExpandTrigger="<c-q>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsEditSplit="vertical"
+
+
 """" Python specific
 
 "" rope completion
@@ -156,7 +164,9 @@ command! -range Pyx python PyExecReplace(<f-line1>,<f-line2>)
 
 "" pymode settings
 let g:pymode_lint = 0
-let g:pymode_options_max_line_length = 0
+let g:pymode_options_max_line_length = 79
+" works well with wombat scheme
+highlight ColorColumn ctermbg=1 guibg='Black'
 "let g:pymode_lint_write = 0
 "let g:pymode_trim_whitespaces = 0
 "let g:pymode_breakpoint_cmd = "import pdb; pdb.set_trace() ### XXX BREAKPOINT"
