@@ -99,11 +99,6 @@ set ruler
 
 set tabpagemax=20 "Maximum number of on-start opened tabs
 
-" automatically open and close the popup menu / preview window
-au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <expr> <C-c> pumvisible() ? "\<C-e>" : "\<C-g>u\<C-c>"
-
 " configure tags - add additional tags here or comment out not-used ones
 "set tags+=~/.vim/tags/cpp
 "set tags+=~/.vim/tags/cpp2
@@ -131,7 +126,7 @@ autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
 
 let g:syntastic_mode_map = {'mode': 'passive'}
 let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_args = '--ignore=E124,E127,W391'
+let g:syntastic_python_flake8_args = '--ignore=E124,E127,W391,E501'
 
 let g:UltiSnipsExpandTrigger="<c-q>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -175,27 +170,29 @@ highlight ColorColumn ctermbg=1 guibg='Black'
 "let g:pymode_lint_ignore = "E127,W391,E501,E502,E231,E128,W291,W293,E251,E124,E255,E122,E121,E225,E261,E262,E126,E272,E302,E222"
 
 let g:rbpt_colorpairs = [
-    \ ['red',         'firebrick3'],
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
     \ ['brown',       'firebrick3'],
     \ ['gray',        'RoyalBlue3'],
     \ ['black',       'SeaGreen3'],
     \ ['darkmagenta', 'DarkOrchid3'],
     \ ['Darkblue',    'firebrick3'],
     \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
     \ ['darkred',     'DarkOrchid3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkcyan',    'SeaGreen3'],
     \ ]
 
 ""
 
 let g:ctrlp_working_path_mode = '0'
+
+let g:ycm_auto_trigger = 0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""" Keybindings """"""""""""""""""""""""""""""""""""""
@@ -319,3 +316,4 @@ cmap <F12> :set paste!<CR>:set paste?<CR>
 noremap <Backspace> :ZoomWin<CR>
 
 noremap <Leader>p :RainbowParenthesesToggle<CR>
+noremap <Leader>g :YcmCompleter GoTo<CR>
