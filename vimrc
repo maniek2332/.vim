@@ -194,6 +194,37 @@ let g:ctrlp_working_path_mode = '0'
 
 let g:ycm_auto_trigger = 0
 
+" Helper function
+function! GetVisualWord()
+    return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
+endfunction
+
+function! HlText(text, word_only)
+    if a:word_only
+        let @/ = '\<' . a:text . '\>'
+    else
+        let @/ = a:text
+    endif
+    set hls
+endfunction
+
+function! HlWord(mode, word_only)
+    if a:mode == 'v'
+        let word = GetVisualWord()
+    else
+        let word = expand('<cword>')
+    endif
+    call HlText(word, a:word_only)
+endfunction
+
+function! AgTextSearch(text, ...)
+    execute 'Ag' . ' ' . a:text . ' ' . join(a:000, ' ')
+    echo join(a:000, ' ')
+    call HlText(a:text, 0)
+endfunction
+
+command! -nargs=* AgS call AgTextSearch(<f-args>)
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""" Keybindings """"""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -317,3 +348,19 @@ noremap <Backspace> :ZoomWin<CR>
 
 noremap <Leader>p :RainbowParenthesesToggle<CR>
 noremap <Leader>g :YcmCompleter GoTo<CR>
+
+" Highlighting and searching
+nnoremap <Leader>/h :call HlWord('n', 1)<CR>
+vnoremap <Leader>/h :call HlWord('v', 1)<CR>
+nnoremap <Leader>/H :call HlWord('n', 0)<CR>
+vnoremap <Leader>/H :call HlWord('v', 0)<CR>
+
+noremap <Leader>n :nohl<CR>
+
+nnoremap <silent> <Leader>/a :AgS <C-r>=expand('<cword>')<CR><CR>
+nmap <Leader>// <Leader>/a
+nnoremap <Leader>/A :AgS <C-r>=expand('<cword>')<CR> 
+
+vnoremap <Leader>/a :<C-U>AgS <C-r>=GetVisualWord()<CR><CR>
+vmap <Leader>// <Leader>/a
+vnoremap <Leader>/A :<C-U>AgS <C-r>=GetVisualWord()<CR> 
