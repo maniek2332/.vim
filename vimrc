@@ -35,6 +35,7 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 Bundle 'vim-scripts/vcscommand.vim'
+Bundle 'ervandew/supertab'
 
 syntax on
 
@@ -120,6 +121,18 @@ let g:bufExplorerFindActive=0
 "let OmniCpp_MayCompleteScope = 1
 "let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
 
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+"Make YCM/Snipmate/Supertab/Syntastic play nice together
+let g:ycm_register_as_syntastic_checker = 1
+let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
+let g:SuperTabContextDefaultCompletionType = "<c-n>"
+let g:SuperTabCrMapping = 1
+
 autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
 
 "let g:myterm="terminal -e"
@@ -159,6 +172,10 @@ command! -range Pyx python PyExecReplace(<f-line1>,<f-line2>)
 
 
 "" pymode settings
+let g:pymode_rope = 1
+let g:pymode_rope_completion = 0
+let g:pymode_rope_completion_on_dot = 0
+
 let g:pymode_lint = 0
 let g:pymode_options_max_line_length = 79
 " works well with wombat scheme
