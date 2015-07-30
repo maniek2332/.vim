@@ -25,7 +25,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'vim-scripts/ZoomWin'
 Bundle 'vim-scripts/bufexplorer.zip'
 Bundle 'tpope/vim-surround'
-Bundle 'vim-scripts/taglist.vim'
+Bundle 'majutsushi/tagbar'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'Rykka/riv.vim'
@@ -36,7 +36,7 @@ Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 Bundle 'vim-scripts/vcscommand.vim'
 Bundle 'ervandew/supertab'
-
+Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 syntax on
 
 au VimEnter * RainbowParenthesesToggle
@@ -354,7 +354,7 @@ inoremap <Esc> <Esc>`^
 "map <Leader><F6> :SCCompileAF <C-r>=expand(b:comp_flags)<Return>
 
 map <F9> :NERDTreeToggle<CR>
-map <F11> :TlistToggle<CR>
+map <F11> :TagbarToggle<CR>
 
 map <F12> :set paste!<CR>:set paste?<CR>
 imap <F12> <Esc>:set paste!<CR>:set paste?<CR>a
