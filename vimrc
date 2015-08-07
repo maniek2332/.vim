@@ -36,6 +36,7 @@ Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 Bundle 'vim-scripts/vcscommand.vim'
 Bundle 'ervandew/supertab'
+Bundle 'rust-lang/rust.vim'
 
 syntax on
 
