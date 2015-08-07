@@ -25,7 +25,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'vim-scripts/ZoomWin'
 Bundle 'vim-scripts/bufexplorer.zip'
 Bundle 'tpope/vim-surround'
-Bundle 'vim-scripts/taglist.vim'
+Bundle 'majutsushi/tagbar'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'Rykka/riv.vim'
@@ -37,6 +37,7 @@ Bundle 'honza/vim-snippets'
 Bundle 'vim-scripts/vcscommand.vim'
 Bundle 'ervandew/supertab'
 Bundle 'rust-lang/rust.vim'
+Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
 
 syntax on
 
