@@ -88,7 +88,11 @@ if $TERM == "xterm" || $TERM == "screen-bce"
 endif
 if has("gui_running")
     colorscheme wombat
-    set guifont=Monospace\ 9
+    if filereadable(expand("~/.fonts/DejaVu Sans Mono for Powerline.ttf"))
+        set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
+    else
+        set guifont=Monospace\ 9
+    endif
 else
     colorscheme wombat256
 endif
