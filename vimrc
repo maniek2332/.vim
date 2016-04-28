@@ -38,6 +38,7 @@ Bundle 'vim-scripts/vcscommand.vim'
 Bundle 'ervandew/supertab'
 Bundle 'rust-lang/rust.vim'
 Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
+Bundle 'cwood/vim-django'
 
 syntax on
 
