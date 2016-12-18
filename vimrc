@@ -360,7 +360,7 @@ inoremap <Esc> <Esc>`^
 "map <Leader><F6> :SCCompileAF <C-r>=expand(b:comp_flags)<Return>
 
 map <F9> :NERDTreeToggle<CR>
-map <F11> :TlistToggle<CR>
+map <F11> :TagbarToggle<CR>
 
 map <F12> :set paste!<CR>:set paste?<CR>
 imap <F12> <Esc>:set paste!<CR>:set paste?<CR>a
@@ -385,3 +385,16 @@ nnoremap <Leader>/A :AgS <C-r>=expand('<cword>')<CR>
 vnoremap <Leader>/a :<C-U>AgS <C-r>=GetVisualWord()<CR><CR>
 vmap <Leader>// <Leader>/a
 vnoremap <Leader>/A :<C-U>AgS <C-r>=GetVisualWord()<CR> 
+
+nnoremap <Leader>pt :Pytest project<CR>
+
+
+""" Usage notes
+"
+" To use Syntastic python code checking flake8 is required
+" (preferably globally installed)
+"
+" py.test tests can be run with <Leader>pt, tests must reside
+" in tests/ directory
+"
+" ag recursive search of selected word may be done with //
