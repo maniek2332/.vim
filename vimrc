@@ -146,7 +146,7 @@ autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
 
 let g:syntastic_mode_map = {'mode': 'passive'}
 let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_args = '--ignore=E124,E127,W391,E501'
+let g:syntastic_python_flake8_args = '--ignore=E124,E127,W391,E501,E302,E225,E226,E228,E231,E261,E262,W291,W293,E203,E221,E303,E201,E202,E222,E126,E128,E251,W601'
 
 let g:UltiSnipsExpandTrigger="<c-q>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
