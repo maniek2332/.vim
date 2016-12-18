@@ -22,7 +22,6 @@ Bundle 'basepi/vim-conque'
 Bundle 'vim-scripts/LargeFile'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-Bundle 'vim-scripts/ZoomWin'
 Bundle 'vim-scripts/bufexplorer.zip'
 Bundle 'tpope/vim-surround'
 Bundle 'majutsushi/tagbar'
@@ -367,8 +366,6 @@ map <F12> :set paste!<CR>:set paste?<CR>
 imap <F12> <Esc>:set paste!<CR>:set paste?<CR>a
 vmap <F12> :set paste!<CR>:set paste?<CR>
 cmap <F12> :set paste!<CR>:set paste?<CR>
-
-noremap <Backspace> :ZoomWin<CR>
 
 noremap <Leader>p :RainbowParenthesesToggle<CR>
 noremap <Leader>g :YcmCompleter GoTo<CR>
