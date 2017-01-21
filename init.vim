@@ -13,7 +13,8 @@ if &compatible
 endif
 
 " Required:
-set runtimepath+=/home/mokulanis/.vim/./repos/github.com/Shougo/dein.vim
+let g:dein_location = $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
+let &runtimepath=&runtimepath . ',' . $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
 
 " Required:
 if dein#load_state($HOME . '/.vim/.')
