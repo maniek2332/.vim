@@ -31,7 +31,7 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('kien/ctrlp.vim')
   call dein#add('kien/rainbow_parentheses.vim')
   call dein#add('vim-airline/vim-airline')
-  call dein#add('Valloric/YouCompleteMe')
+  call dein#add('Valloric/YouCompleteMe', {'build': './install.py'})
 
   " Required:
   call dein#end()
