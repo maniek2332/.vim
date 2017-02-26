@@ -32,6 +32,10 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('kien/rainbow_parentheses.vim')
   call dein#add('vim-airline/vim-airline')
   call dein#add('Valloric/YouCompleteMe', {'build': './install.py'})
+  call dein#add('majutsushi/tagbar')
+  call dein#add('scrooloose/syntastic')
+  call dein#add('scrooloose/nerdcommenter')
+  call dein#add('scrooloose/nerdtree')
 
   " Required:
   call dein#end()
