@@ -109,6 +109,21 @@ if has("gui_running")
     endif
 else
     colorscheme wombat256
+    highlight ColorColumn ctermbg=235
+
+    " setting console window title
+    if exists('$VIRTUAL_ENV')
+        let &titlestring = toupper(fnamemodify($VIRTUAL_ENV, ":t")) . " - NVIM"
+    else
+        let &titlestring = "NVIM"
+    endif
+    set title
+endif
+
+if exists('g:nyaovim_version')
+    let g:airline_powerline_fonts = 0  " poor support for nyaovim
+else
+    let g:airline_powerline_fonts = 1
 endif
 
 set wildmenu
@@ -198,8 +213,6 @@ let g:pymode_rope_completion_on_dot = 0
 
 let g:pymode_lint = 0
 let g:pymode_options_max_line_length = 79
-" works well with wombat scheme
-highlight ColorColumn ctermbg=1 guibg='Black'
 "let g:pymode_lint_write = 0
 "let g:pymode_trim_whitespaces = 0
 "let g:pymode_breakpoint_cmd = "import pdb; pdb.set_trace() ### XXX BREAKPOINT"
@@ -230,8 +243,6 @@ let g:rbpt_colorpairs = [
 let g:ctrlp_working_path_mode = '0'
 
 let g:ycm_auto_trigger = 0
-
-let g:airline_powerline_fonts = 0  " poor support for nyaovim
 
 " Helper function
 function! GetVisualWord()
