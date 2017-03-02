@@ -189,23 +189,6 @@ let g:UltiSnipsEditSplit="vertical"
 autocmd FileType python noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
 autocmd FileType python setlocal list listchars=trail:·,tab:·\ 
 
-"Pyer (executing python from vim)
-python << EOL
-import vim, StringIO, sys
-def PyExecReplace(line1,line2):
-  r = vim.current.buffer.range(int(line1),int(line2))
-  redirected = StringIO.StringIO()
-  sys.stdout = redirected
-  exec('\n'.join(r[:]) + '\n')
-  sys.stdout = sys.__stdout__
-  output = redirected.getvalue().split('\n')
-  r[:] = output[:-1] # the -1 is to remove the final blank line
-  redirected.close()
-EOL
-command! -range Pyer python PyExecReplace(<f-line1>,<f-line2>)
-command! -range Pyx python PyExecReplace(<f-line1>,<f-line2>)
-
-
 "" pymode settings
 let g:pymode_rope = 1
 let g:pymode_rope_completion = 0
