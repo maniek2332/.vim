@@ -7,37 +7,51 @@ set number
 
 filetype off
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+"dein Scripts-----------------------------
+if &compatible
+  set nocompatible               " Be iMproved
+endif
 
-" let Vundle manage Vundle
-" required! 
-Bundle 'gmarik/vundle'
-Bundle 'alfredodeza/coveragepy.vim'
-Bundle 'vim-scripts/hexman.vim'
-Bundle 'alfredodeza/pytest.vim'
-Bundle 'klen/python-mode'
-Bundle 'vim-scripts/tabops'
-Bundle 'basepi/vim-conque'
-Bundle 'vim-scripts/LargeFile'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/nerdtree'
-Bundle 'vim-scripts/bufexplorer.zip'
-Bundle 'tpope/vim-surround'
-Bundle 'majutsushi/tagbar'
-Bundle 'kien/ctrlp.vim'
-Bundle 'scrooloose/syntastic'
-Bundle 'Rykka/riv.vim'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'rking/ag.vim'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'SirVer/ultisnips'
-Bundle 'honza/vim-snippets'
-Bundle 'vim-scripts/vcscommand.vim'
-Bundle 'ervandew/supertab'
-Bundle 'rust-lang/rust.vim'
-Bundle 'powerline/powerline', {'rtp': 'powerline/bindings/vim/'}
-Bundle 'cwood/vim-django'
+" Required:
+let g:dein_location = $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
+let &runtimepath=&runtimepath . ',' . $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
+
+" Required:
+if dein#load_state($HOME . '/.vim/.')
+  call dein#begin($HOME . '/.vim/.')
+
+  " Let dein manage dein
+  " Required:
+  call dein#add($HOME . '/.vim/./repos/github.com/Shougo/dein.vim')
+
+  " Add or remove your plugins here:
+  call dein#add('Shougo/neosnippet.vim')
+  call dein#add('Shougo/neosnippet-snippets')
+  call dein#add('klen/python-mode')
+  call dein#add('kien/ctrlp.vim')
+  call dein#add('kien/rainbow_parentheses.vim')
+  call dein#add('vim-airline/vim-airline')
+  call dein#add('Valloric/YouCompleteMe', {'build': './install.py'})
+  call dein#add('majutsushi/tagbar')
+  call dein#add('scrooloose/syntastic')
+  call dein#add('scrooloose/nerdcommenter')
+  call dein#add('scrooloose/nerdtree')
+
+  " Required:
+  call dein#end()
+  call dein#save_state()
+endif
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+"if dein#check_install()
+"  call dein#install()
+"endif
+
+"End dein Scripts-------------------------
 
 syntax on
 
@@ -95,6 +109,21 @@ if has("gui_running")
     endif
 else
     colorscheme wombat256
+    highlight ColorColumn ctermbg=235
+
+    " setting console window title
+    if exists('$VIRTUAL_ENV')
+        let &titlestring = toupper(fnamemodify($VIRTUAL_ENV, ":t")) . " - VIM"
+    else
+        let &titlestring = "VIM"
+    endif
+    set title
+endif
+
+if exists('g:nyaovim_version')
+    let g:airline_powerline_fonts = 0  " poor support for nyaovim
+else
+    let g:airline_powerline_fonts = 1
 endif
 
 set wildmenu
@@ -160,32 +189,13 @@ let g:UltiSnipsEditSplit="vertical"
 autocmd FileType python noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
 autocmd FileType python setlocal list listchars=trail:·,tab:·\ 
 
-"Pyer (executing python from vim)
-python << EOL
-import vim, StringIO, sys
-def PyExecReplace(line1,line2):
-  r = vim.current.buffer.range(int(line1),int(line2))
-  redirected = StringIO.StringIO()
-  sys.stdout = redirected
-  exec('\n'.join(r[:]) + '\n')
-  sys.stdout = sys.__stdout__
-  output = redirected.getvalue().split('\n')
-  r[:] = output[:-1] # the -1 is to remove the final blank line
-  redirected.close()
-EOL
-command! -range Pyer python PyExecReplace(<f-line1>,<f-line2>)
-command! -range Pyx python PyExecReplace(<f-line1>,<f-line2>)
-
-
 "" pymode settings
-let g:pymode_rope = 1
+let g:pymode_rope = 0
 let g:pymode_rope_completion = 0
 let g:pymode_rope_completion_on_dot = 0
 
 let g:pymode_lint = 0
 let g:pymode_options_max_line_length = 79
-" works well with wombat scheme
-highlight ColorColumn ctermbg=1 guibg='Black'
 "let g:pymode_lint_write = 0
 "let g:pymode_trim_whitespaces = 0
 "let g:pymode_breakpoint_cmd = "import pdb; pdb.set_trace() ### XXX BREAKPOINT"
@@ -398,3 +408,5 @@ nnoremap <Leader>pt :Pytest project<CR>
 " in tests/ directory
 "
 " ag recursive search of selected word may be done with //
+
+
