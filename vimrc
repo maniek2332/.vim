@@ -8,10 +8,6 @@ set number
 filetype off
 
 "dein Scripts-----------------------------
-if &compatible
-  set nocompatible               " Be iMproved
-endif
-
 " Required:
 let g:dein_location = $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
 let &runtimepath=&runtimepath . ',' . $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
@@ -36,6 +32,7 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('scrooloose/syntastic')
   call dein#add('scrooloose/nerdcommenter')
   call dein#add('scrooloose/nerdtree')
+  call dein#add('tomtom/tcomment_vim')
 
   " Required:
   call dein#end()
@@ -139,6 +136,9 @@ set ruler
 
 set tabpagemax=20 "Maximum number of on-start opened tabs
 
+set undofile
+set undodir=~/.vim/undos/
+
 " Handler <ENTER> on completion menu
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
@@ -195,6 +195,8 @@ let g:ctrlp_working_path_mode = '0'
 
 let g:ycm_auto_trigger = 0
 
+let g:tcommentMapLeaderOp1 = '<Leader>x'
+
 " Helper function
 function! GetVisualWord()
     return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
@@ -230,36 +232,8 @@ command! -nargs=* AgS call AgTextSearch(<f-args>)
 """"""""" Keybindings """"""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" NERD commenter
-nmap  <Leader>xa           <Plug>NERDCommenterAltDelims
-vmap  <Leader>xA           <Plug>NERDCommenterAppend
-nmap  <Leader>xA           <Plug>NERDCommenterAppend
-vmap  <Leader>x$           <Plug>NERDCommenterToEOL
-nmap  <Leader>x$           <Plug>NERDCommenterToEOL
-vmap  <Leader>xu           <Plug>NERDCommenterUncomment
-nmap  <Leader>xu           <Plug>NERDCommenterUncomment
-vmap  <Leader>xn           <Plug>NERDCommenterNest
-nmap  <Leader>xn           <Plug>NERDCommenterNest
-vmap  <Leader>xb           <Plug>NERDCommenterAlignBoth
-nmap  <Leader>xb           <Plug>NERDCommenterAlignBoth
-vmap  <Leader>xl           <Plug>NERDCommenterAlignLeft
-nmap  <Leader>xl           <Plug>NERDCommenterAlignLeft
-vmap  <Leader>xy           <Plug>NERDCommenterYank
-nmap  <Leader>xy           <Plug>NERDCommenterYank
-vmap  <Leader>xi           <Plug>NERDCommenterInvert
-nmap  <Leader>xi           <Plug>NERDCommenterInvert
-vmap  <Leader>xs           <Plug>NERDCommenterSexy
-nmap  <Leader>xs           <Plug>NERDCommenterSexy
-vmap  <Leader>xm           <Plug>NERDCommenterMinimal
-nmap  <Leader>xm           <Plug>NERDCommenterMinimal
-vmap  <Leader>x<Space>     <Plug>NERDCommenterToggle
-nmap  <Leader>x<Space>     <Plug>NERDCommenterToggle
-vmap  <Leader>xx           <Plug>NERDCommenterToggle
-nmap  <Leader>xx           <Plug>NERDCommenterToggle
-vmap  <Leader>x            <Plug>NERDCommenterToggle
-nmap  <Leader>x            <Plug>NERDCommenterToggle
-vmap  <Leader>xc           <Plug>NERDCommenterComment
-nmap  <Leader>xc           <Plug>NERDCommenterComment
+" TComment
+nmap <Leader>xx <Leader>xc
 
 "Alternative <Leader> key
 map , <Leader>
@@ -290,8 +264,6 @@ noremap gr gT
 noremap <silent> g^ :tabfirst<CR>
 noremap <silent> g$ :tablast<CR>
 
-map gb :bprevious!<CR>
-map gn :bnext!<CR>
 map <Leader>[ :bprevious!<CR>
 map <Leader>] :bnext!<CR>
 map <Leader>bb <C-^>
