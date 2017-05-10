@@ -87,6 +87,8 @@ set smarttab
 
 set laststatus=2
 
+set splitright  " open splits on right side
+
 " autofolding
 "set foldmethod=indent
 "set foldlevel=99
@@ -109,7 +111,6 @@ if has("gui_running")
     endif
 else
     colorscheme wombat256
-    highlight ColorColumn ctermbg=235
 
     " setting console window title
     if exists('$VIRTUAL_ENV')
@@ -119,6 +120,9 @@ else
     endif
     set title
 endif
+
+" for wombat colors
+highlight ColorColumn ctermbg=235 guibg=#303030
 
 if exists('g:nyaovim_version')
     let g:airline_powerline_fonts = 0  " poor support for nyaovim
@@ -135,42 +139,13 @@ set ruler
 
 set tabpagemax=20 "Maximum number of on-start opened tabs
 
-" configure tags - add additional tags here or comment out not-used ones
-"set tags+=~/.vim/tags/cpp
-"set tags+=~/.vim/tags/cpp2
-"set tags+=~/.vim/tags/tags.python
-"set tags+=~/.vim/tags/tags.django
-"set tags+=~/.vim/tags/es
-"set tags=~/.vim/tags/pytags,~/.vim/tags/es
-" build tags of your own project with CTRL+F12
-"map <C-F12> :!ctags -R --c-kinds=+p --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
-
-let g:bufExplorerFindActive=0
-
-" OmniCppComplete
-"let OmniCpp_NamespaceSearch = 1
-"let OmniCpp_GlobalScopeSearch = 1
-"let OmniCpp_ShowAccess = 1
-"let OmniCpp_MayCompleteDot = 1
-"let OmniCpp_MayCompleteArrow = 1
-"let OmniCpp_MayCompleteScope = 1
-"let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
-
+" Handler <ENTER> on completion menu
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-"Make YCM/Snipmate/Supertab/Syntastic play nice together
 let g:ycm_register_as_syntastic_checker = 1
-let g:ycm_key_list_select_completion = ['<C-TAB>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-S-TAB>', '<Up>']
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:SuperTabDefaultCompletionType = 'context'
-let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
-let g:SuperTabContextDefaultCompletionType = "<c-n>"
-let g:SuperTabCrMapping = 1
 
 autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
-
-"let g:myterm="terminal -e"
 
 let g:syntastic_mode_map = {'mode': 'passive'}
 let g:syntastic_python_checkers = ['flake8']
@@ -184,8 +159,6 @@ let g:UltiSnipsEditSplit="vertical"
 
 """" Python specific
 
-"" rope completion
-"autocmd FileType python setlocal omnifunc=RopeCompleteFunc
 autocmd FileType python noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
 autocmd FileType python setlocal list listchars=trail:·,tab:·\ 
 
@@ -196,11 +169,6 @@ let g:pymode_rope_completion_on_dot = 0
 
 let g:pymode_lint = 0
 let g:pymode_options_max_line_length = 79
-"let g:pymode_lint_write = 0
-"let g:pymode_trim_whitespaces = 0
-"let g:pymode_breakpoint_cmd = "import pdb; pdb.set_trace() ### XXX BREAKPOINT"
-"let g:pymode_breakpoint_key = "<Leader>B"
-"let g:pymode_lint_ignore = "E127,W391,E501,E502,E231,E128,W291,W293,E251,E124,E255,E122,E121,E225,E261,E262,E126,E272,E302,E222"
 
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
@@ -408,5 +376,3 @@ nnoremap <Leader>pt :Pytest project<CR>
 " in tests/ directory
 "
 " ag recursive search of selected word may be done with //
-
-
