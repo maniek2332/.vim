@@ -23,7 +23,6 @@ if dein#load_state($HOME . '/.vim/.')
   " Add or remove your plugins here:
   call dein#add('Shougo/neosnippet.vim')
   call dein#add('Shougo/neosnippet-snippets')
-  call dein#add('klen/python-mode')
   call dein#add('kien/ctrlp.vim')
   call dein#add('kien/rainbow_parentheses.vim')
   call dein#add('vim-airline/vim-airline')
@@ -33,6 +32,8 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('scrooloose/nerdcommenter')
   call dein#add('scrooloose/nerdtree')
   call dein#add('tomtom/tcomment_vim')
+  call dein#add('Vimjas/vim-python-pep8-indent')
+  call dein#add('lambdalisue/vim-cython-syntax')
 
   " Required:
   call dein#end()
@@ -85,6 +86,7 @@ set smarttab
 set laststatus=2
 
 set splitright  " open splits on right side
+set splitbelow
 
 " autofolding
 "set foldmethod=indent
@@ -120,6 +122,8 @@ endif
 
 " for wombat colors
 highlight ColorColumn ctermbg=235 guibg=#303030
+
+set colorcolumn=80
 
 if exists('g:nyaovim_version')
     let g:airline_powerline_fonts = 0  " poor support for nyaovim
@@ -159,16 +163,9 @@ let g:UltiSnipsEditSplit="vertical"
 
 """" Python specific
 
-autocmd FileType python noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
-autocmd FileType python setlocal list listchars=trail:·,tab:·\ 
-
-"" pymode settings
-let g:pymode_rope = 0
-let g:pymode_rope_completion = 0
-let g:pymode_rope_completion_on_dot = 0
-
-let g:pymode_lint = 0
-let g:pymode_options_max_line_length = 79
+autocmd FileType python,cython,pyrex noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
+autocmd FileType python,cython,pyrex setlocal list listchars=trail:·,tab:·\ 
+autocmd FileType python,cython,pyrex setlocal nosmartindent
 
 let g:rbpt_colorpairs = [
     \ ['brown',       'RoyalBlue3'],
