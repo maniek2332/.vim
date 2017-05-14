@@ -5,3 +5,7 @@
 /cache_nvim
 /repos/
 /state_nvim.vim
+cache_vim
+cache_gvim
+state_vim.vim
+state_gvim.vim
