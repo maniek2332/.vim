@@ -32,6 +32,9 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('scrooloose/nerdcommenter')
   call dein#add('scrooloose/nerdtree')
   call dein#add('tomtom/tcomment_vim')
+  call dein#add('dyng/ctrlsf.vim')
+  call dein#add('ervandew/supertab')
+  call dein#add('tpope/vim-sleuth')
   call dein#add('Vimjas/vim-python-pep8-indent')
   call dein#add('lambdalisue/vim-cython-syntax')
 
@@ -194,6 +197,15 @@ let g:ycm_auto_trigger = 0
 
 let g:tcommentMapLeaderOp1 = '<Leader>x'
 
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion = ['<Up>']
+let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
+let g:SuperTabContextDefaultCompletionType = "<c-n>"
+let g:SuperTabCrMapping = 1
+
+
 " Helper function
 function! GetVisualWord()
     return getline("'<")[getpos("'<")[2]-1:getpos("'>")[2]-1]
@@ -216,14 +228,6 @@ function! HlWord(mode, word_only)
     endif
     call HlText(word, a:word_only)
 endfunction
-
-function! AgTextSearch(text, ...)
-    execute 'Ag' . ' ' . a:text . ' ' . join(a:000, ' ')
-    echo join(a:000, ' ')
-    call HlText(a:text, 0)
-endfunction
-
-command! -nargs=* AgS call AgTextSearch(<f-args>)
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""" Keybindings """"""""""""""""""""""""""""""""""""""
@@ -322,19 +326,20 @@ nnoremap <Leader>/h :call HlWord('n', 1)<CR>
 vnoremap <Leader>/h :call HlWord('v', 1)<CR>
 nnoremap <Leader>/H :call HlWord('n', 0)<CR>
 vnoremap <Leader>/H :call HlWord('v', 0)<CR>
-
 noremap <Leader>n :nohl<CR>
-
-nnoremap <silent> <Leader>/a :AgS <C-r>=expand('<cword>')<CR><CR>
-nmap <Leader>// <Leader>/a
-nnoremap <Leader>/A :AgS <C-r>=expand('<cword>')<CR> 
-
-vnoremap <Leader>/a :<C-U>AgS <C-r>=GetVisualWord()<CR><CR>
-vmap <Leader>// <Leader>/a
-vnoremap <Leader>/A :<C-U>AgS <C-r>=GetVisualWord()<CR> 
 
 nnoremap <Leader>pt :Pytest project<CR>
 
+" CtrlSF
+nmap     <C-F>f <Plug>CtrlSFPrompt
+vmap     <C-F>f <Plug>CtrlSFVwordPath
+vmap     <C-F>F <Plug>CtrlSFVwordExec
+nmap     <C-F>n <Plug>CtrlSFCwordPath
+nmap     <C-F>p <Plug>CtrlSFPwordPath
+nnoremap <C-F>o :CtrlSFOpen<CR>
+nnoremap <C-F>t :CtrlSFToggle<CR>
+inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+map      <C-F>  <nop>
 
 """ Usage notes
 "
