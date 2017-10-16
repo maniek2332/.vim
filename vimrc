@@ -6,6 +6,7 @@ runtime macros/matchit.vim
 set number
 
 filetype off
+syntax off
 
 "dein Scripts-----------------------------
 " Required:
@@ -24,7 +25,7 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('Shougo/neosnippet.vim')
   call dein#add('Shougo/neosnippet-snippets')
   call dein#add('kien/ctrlp.vim')
-  call dein#add('kien/rainbow_parentheses.vim')
+  call dein#add('luochen1990/rainbow')
   call dein#add('vim-airline/vim-airline')
   call dein#add('Valloric/YouCompleteMe', {'build': './install.py'})
   call dein#add('majutsushi/tagbar')
@@ -37,15 +38,12 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('tpope/vim-sleuth')
   call dein#add('Vimjas/vim-python-pep8-indent')
   call dein#add('lambdalisue/vim-cython-syntax')
+  call dein#add('pboettch/vim-cmake-syntax')
 
   " Required:
   call dein#end()
   call dein#save_state()
 endif
-
-" Required:
-filetype plugin indent on
-syntax enable
 
 " If you want to install not installed plugins on startup.
 "if dein#check_install()
@@ -53,13 +51,6 @@ syntax enable
 "endif
 
 "End dein Scripts-------------------------
-
-syntax on
-
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax python RainbowParenthesesLoadBraces
 
 set bs=indent,eol,start
 set wrap
@@ -95,38 +86,6 @@ set splitbelow
 "set foldmethod=indent
 "set foldlevel=99
 "set foldnestmax=2
-
-"highlight Pmenu ctermbg=238
-"highlight PmenuSel ctermbg=4
-"highlight PmenuSbar ctermbg=4
-"highlight Pmenu ctermfg=2 
-
-if $TERM == "xterm" || $TERM == "screen-bce"
-    set t_Co=256
-endif
-if has("gui_running")
-    colorscheme wombat
-    if filereadable(expand("~/.fonts/DejaVu Sans Mono for Powerline.ttf"))
-        set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
-    else
-        set guifont=Monospace\ 9
-    endif
-else
-    colorscheme wombat256
-
-    " setting console window title
-    if exists('$VIRTUAL_ENV')
-        let &titlestring = toupper(fnamemodify($VIRTUAL_ENV, ":t")) . " - VIM"
-    else
-        let &titlestring = "VIM"
-    endif
-    set title
-endif
-
-" for wombat colors
-highlight ColorColumn ctermbg=235 guibg=#303030
-
-set colorcolumn=80
 
 if exists('g:nyaovim_version')
     let g:airline_powerline_fonts = 0  " poor support for nyaovim
@@ -170,25 +129,6 @@ autocmd FileType python,cython,pyrex noremap <Leader>B Oimport pdb; pdb.set_trac
 autocmd FileType python,cython,pyrex setlocal list listchars=trail:·,tab:·\ 
 autocmd FileType python,cython,pyrex setlocal nosmartindent
 
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['red',         'firebrick3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ]
-
 ""
 
 let g:ctrlp_working_path_mode = '0'
@@ -204,6 +144,46 @@ let g:SuperTabDefaultCompletionType = 'context'
 let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
 let g:SuperTabContextDefaultCompletionType = "<c-n>"
 let g:SuperTabCrMapping = 1
+
+" disable rainbow for cmake (causes highlighting glitches)
+let g:rainbow_conf = {
+	\	'separately': {
+	\		'*': {},
+	\		'cmake': 0,
+	\	}
+	\}
+
+let g:rainbow_active = 1
+
+filetype plugin indent on
+syntax on
+
+if $TERM == "xterm" || $TERM == "screen-bce"
+    set t_Co=256
+endif
+if has("gui_running")
+    colorscheme wombat
+    if filereadable(expand("~/.fonts/DejaVu Sans Mono for Powerline.ttf"))
+        set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
+    else
+        set guifont=Monospace\ 9
+    endif
+else
+    colorscheme wombat256
+
+    " setting console window title
+    if exists('$VIRTUAL_ENV')
+        let &titlestring = toupper(fnamemodify($VIRTUAL_ENV, ":t")) . " - VIM"
+    else
+        let &titlestring = "VIM"
+    endif
+    set title
+endif
+
+" for wombat colors
+highlight ColorColumn ctermbg=235 guibg=#303030
+
+set colorcolumn=80
 
 
 " Helper function
@@ -318,7 +298,7 @@ imap <F12> <Esc>:set paste!<CR>:set paste?<CR>a
 vmap <F12> :set paste!<CR>:set paste?<CR>
 cmap <F12> :set paste!<CR>:set paste?<CR>
 
-noremap <Leader>p :RainbowParenthesesToggle<CR>
+noremap <Leader>p :RainbowToggle<CR>
 noremap <Leader>g :YcmCompleter GoTo<CR>
 
 " Highlighting and searching
