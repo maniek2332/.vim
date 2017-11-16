@@ -39,6 +39,9 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('Vimjas/vim-python-pep8-indent')
   call dein#add('lambdalisue/vim-cython-syntax')
   call dein#add('pboettch/vim-cmake-syntax')
+  call dein#add('tpope/vim-repeat')
+  call dein#add('svermeulen/vim-easyclip')
+  call dein#add('junegunn/vim-peekaboo')
 
   " Required:
   call dein#end()
@@ -111,7 +114,10 @@ inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 let g:ycm_register_as_syntastic_checker = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 
-autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
+augroup vimrc_session
+  autocmd!
+  autocmd VimLeavePre * mksession! ~/.vim/session_last.vim
+augroup END
 
 let g:syntastic_mode_map = {'mode': 'passive'}
 let g:syntastic_python_checkers = ['flake8']
@@ -125,13 +131,16 @@ let g:UltiSnipsEditSplit="vertical"
 
 """" Python specific
 
-autocmd FileType python,cython,pyrex noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
-autocmd FileType python,cython,pyrex setlocal list listchars=trail:·,tab:·\ 
-autocmd FileType python,cython,pyrex setlocal nosmartindent
+augroup vimrc_python
+  autocmd!
+  autocmd FileType python,cython,pyrex noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
+  autocmd FileType python,cython,pyrex setlocal list listchars=trail:·,tab:·\ 
+  autocmd FileType python,cython,pyrex setlocal nosmartindent
+augroup END
 
 ""
 
-let g:ctrlp_working_path_mode = '0'
+" let g:ctrlp_working_path_mode = '0'
 
 let g:ycm_auto_trigger = 0
 
@@ -154,6 +163,30 @@ let g:rainbow_conf = {
 	\}
 
 let g:rainbow_active = 1
+
+let g:peekaboo_window = 'vert bo 40new'
+let g:peekaboo_delay = 1000
+let g:peekaboo_compact = 0
+let g:peekaboo_prefix = ''
+let g:peekaboo_ins_prefix = ''
+
+" default autocmd does not work, maybe it conflicts with EasyClip
+augroup peekaboo2
+  autocmd!
+  autocmd FileType * call peekaboo#on()
+augroup END
+
+if executable('ag')
+  " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
+  set grepprg=ag\ --nogroup\ --nocolor
+  " Use ag in CtrlP for listing files. Lightning fast, respects .gitignore
+  " and .agignore. Ignores hidden files by default.
+  let g:ctrlp_user_command = 'cd %s && ag . -l --nocolor -g ""'
+  let g:ctrlp_use_caching = 0
+else
+  "ctrl+p ignore files in .gitignore
+  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+endif
 
 filetype plugin indent on
 syntax on
@@ -233,12 +266,17 @@ map gO O<Esc>
 "vnoremap <silent> # :call VisualSearch('b')<CR>
 
 " Bindings for null register
-noremap _ "_
-noremap - "_
-noremap zx "_
-vnoremap _ "_
-vnoremap - "_
-vnoremap zx "_
+" (now obsolete with EasyClip)
+" noremap _ "_
+" noremap - "_
+" noremap zx "_
+" vnoremap _ "_
+" vnoremap - "_
+" vnoremap zx "_
+
+" Allows yNy and mNm to work
+onoremap m _
+onoremap y _
 
 noremap gr gT
 
@@ -320,6 +358,10 @@ nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>t :CtrlSFToggle<CR>
 inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
 map      <C-F>  <nop>
+
+" EasyClip
+
+noremap gm m
 
 """ Usage notes
 "
