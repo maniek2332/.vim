@@ -41,7 +41,9 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('pboettch/vim-cmake-syntax')
   call dein#add('tpope/vim-repeat')
   call dein#add('svermeulen/vim-easyclip')
+  call dein#add('dbsr/vimpy')
   call dein#add('junegunn/vim-peekaboo')
+  call dein#add('python-rope/ropevim')
 
   " Required:
   call dein#end()
@@ -128,7 +130,6 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsEditSplit="vertical"
 
-
 """" Python specific
 
 augroup vimrc_python
@@ -138,7 +139,9 @@ augroup vimrc_python
   autocmd FileType python,cython,pyrex setlocal nosmartindent
 augroup END
 
-""
+let g:ropevim_extended_complete = 1
+let g:ropevim_enable_autoimport = 1
+let g:ropevim_autoimport_modules = ["os.*", "traceback", "django.*"]
 
 " let g:ctrlp_working_path_mode = '0'
 
@@ -169,6 +172,8 @@ let g:peekaboo_delay = 1000
 let g:peekaboo_compact = 0
 let g:peekaboo_prefix = ''
 let g:peekaboo_ins_prefix = ''
+
+let g:isort_params = '-m 5'
 
 " default autocmd does not work, maybe it conflicts with EasyClip
 augroup peekaboo2
@@ -362,6 +367,14 @@ map      <C-F>  <nop>
 " EasyClip
 
 noremap gm m
+
+" Rope completion with autoimport
+imap <C-q><Tab> <C-R>=RopeCodeAssistInsertMode()<CR>
+nmap <C-q><Tab> :RopeAutoImport<CR>
+
+" isort bindings (python import autosorter)
+nmap <Leader>I :exe '%!isort' '-' g:isort_params<CR>
+vmap <Leader>I :exe ''<,'>!isort' '-' g:isort_params<CR>
 
 """ Usage notes
 "
