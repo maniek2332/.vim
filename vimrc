@@ -40,10 +40,10 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('lambdalisue/vim-cython-syntax')
   call dein#add('pboettch/vim-cmake-syntax')
   call dein#add('tpope/vim-repeat')
-  call dein#add('svermeulen/vim-easyclip')
-  call dein#add('dbsr/vimpy')
-  call dein#add('junegunn/vim-peekaboo')
+  " call dein#add('junegunn/vim-peekaboo')
   call dein#add('python-rope/ropevim')
+  call dein#add('plytophogy/vim-virtualenv')
+  call dein#add('vim-scripts/YankRing.vim')
 
   " Required:
   call dein#end()
@@ -115,6 +115,9 @@ inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 let g:ycm_register_as_syntastic_checker = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_complete_in_comments = 1
+let g:ycm_complete_in_strings = 1
 
 augroup vimrc_session
   autocmd!
@@ -130,6 +133,8 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 let g:UltiSnipsEditSplit="vertical"
 
+let g:airline#extensions#virtualenv#enabled = 1
+
 """" Python specific
 
 augroup vimrc_python
@@ -137,6 +142,7 @@ augroup vimrc_python
   autocmd FileType python,cython,pyrex noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
   autocmd FileType python,cython,pyrex setlocal list listchars=trail:·,tab:·\ 
   autocmd FileType python,cython,pyrex setlocal nosmartindent
+  autocmd BufReadPost python,cython,pyrex if exists('$VIRTUAL_ENV') | VirtualEnvActivate | endif
 augroup END
 
 let g:ropevim_extended_complete = 1
@@ -167,19 +173,19 @@ let g:rainbow_conf = {
 
 let g:rainbow_active = 1
 
-let g:peekaboo_window = 'vert bo 40new'
-let g:peekaboo_delay = 1000
-let g:peekaboo_compact = 0
-let g:peekaboo_prefix = ''
-let g:peekaboo_ins_prefix = ''
+" let g:peekaboo_window = 'vert bo 40new'
+" let g:peekaboo_delay = 1000
+" let g:peekaboo_compact = 0
+" let g:peekaboo_prefix = ''
+" let g:peekaboo_ins_prefix = ''
 
 let g:isort_params = '-m 5'
 
 " default autocmd does not work, maybe it conflicts with EasyClip
-augroup peekaboo2
-  autocmd!
-  autocmd FileType * call peekaboo#on()
-augroup END
+" augroup peekaboo2
+"   autocmd!
+"   autocmd FileType * call peekaboo#on()
+" augroup END
 
 if executable('ag')
   " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
@@ -223,6 +229,9 @@ highlight ColorColumn ctermbg=235 guibg=#303030
 
 set colorcolumn=80
 
+let g:yankring_replace_n_pkey = '<Leader>k'
+let g:yankring_replace_n_nkey = '<Leader>K'
+
 
 " Helper function
 function! GetVisualWord()
@@ -246,6 +255,26 @@ function! HlWord(mode, word_only)
     endif
     call HlText(word, a:word_only)
 endfunction
+
+if has('python')
+py << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  exec(open(activate_this).read(), dict(__file__=activate_this))
+EOF
+elseif has('python3')
+py3 << EOF
+import os
+import sys
+if 'VIRTUAL_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+  exec(open(activate_this).read(), dict(__file__=activate_this))
+EOF
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """"""""" Keybindings """"""""""""""""""""""""""""""""""""""
@@ -271,7 +300,7 @@ map gO O<Esc>
 "vnoremap <silent> # :call VisualSearch('b')<CR>
 
 " Bindings for null register
-" (now obsolete with EasyClip)
+" (now obsolete with YankRing)
 " noremap _ "_
 " noremap - "_
 " noremap zx "_
@@ -333,6 +362,8 @@ inoremap <Esc> <Esc>`^
 "map <Leader><F5> :SCCompileRunAF <C-r>=expand(b:comp_flags)<Return>
 "map <Leader><F6> :SCCompileAF <C-r>=expand(b:comp_flags)<Return>
 
+nnoremap <silent> <F8> :YRShow<CR>
+
 map <F9> :NERDTreeToggle<CR>
 map <F11> :TagbarToggle<CR>
 
@@ -364,13 +395,9 @@ nnoremap <C-F>t :CtrlSFToggle<CR>
 inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
 map      <C-F>  <nop>
 
-" EasyClip
-
-noremap gm m
-
 " Rope completion with autoimport
-imap <C-q><Tab> <C-R>=RopeCodeAssistInsertMode()<CR>
-nmap <C-q><Tab> :RopeAutoImport<CR>
+imap <S-Space> <C-R>=RopeCodeAssistInsertMode()<CR>
+nmap <S-Space> :RopeAutoImport<CR>
 
 " isort bindings (python import autosorter)
 nmap <Leader>I :exe '%!isort' '-' g:isort_params<CR>
