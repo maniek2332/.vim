@@ -44,6 +44,7 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('python-rope/ropevim')
   call dein#add('plytophogy/vim-virtualenv')
   call dein#add('vim-scripts/YankRing.vim')
+  call dein#add('tpope/vim-fugitive')
 
   " Required:
   call dein#end()
