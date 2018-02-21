@@ -45,6 +45,8 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('plytophogy/vim-virtualenv')
   call dein#add('vim-scripts/YankRing.vim')
   call dein#add('tpope/vim-fugitive')
+  call dein#add('junegunn/gv.vim')
+  call dein#add('airblade/vim-gitgutter')
   call dein#add('tmhedberg/SimpylFold')
 
   " Required:
@@ -143,6 +145,11 @@ augroup vimrc_python
   autocmd BufReadPost python,cython,pyrex if exists('$VIRTUAL_ENV') | VirtualEnvActivate | endif
 augroup END
 
+augroup vimrc_git
+    autocmd!
+    autocmd BufWritePost * GitGutter
+augroup END
+
 let g:ropevim_extended_complete = 1
 let g:ropevim_enable_autoimport = 1
 let g:ropevim_autoimport_modules = ["os.*", "traceback", "django.*"]
@@ -232,6 +239,7 @@ set colorcolumn=80
 let g:yankring_replace_n_pkey = '<Leader>k'
 let g:yankring_replace_n_nkey = '<Leader>K'
 
+let g:gitgutter_map_keys = 0
 
 " Helper function
 function! GetVisualWord()
@@ -402,6 +410,26 @@ nmap <S-Space> :RopeAutoImport<CR>
 " isort bindings (python import autosorter)
 nmap <Leader>I :exe '%!isort' '-' g:isort_params<CR>
 vmap <Leader>I :exe ''<,'>!isort' '-' g:isort_params<CR>
+
+" Gitgutter showing changes and hunks navigation
+nmap <silent> <Leader>hh :GitGutter<CR>
+nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
+nmap <Leader>hs <Plug>GitGutterStageHunk
+nmap <Leader>hu <Plug>GitGutterUndoHunk
+nmap <Leader>hp <Plug>GitGutterPreviewHunk
+omap ih <Plug>GitGutterTextObjectInnerPending
+omap ah <Plug>GitGutterTextObjectOuterPending
+xmap ih <Plug>GitGutterTextObjectInnerVisual
+xmap ah <Plug>GitGutterTextObjectOuterVisual
+
+" GV bindings (general navigation, current file only, file revisions list)
+nmap <Leader>ht :GV<CR>
+vmap <Leader>ht :GV<CR>
+nmap <Leader>hc :GV!<CR>
+vmap <Leader>hc :GV!<CR>
+nmap <Leader>hr :GV?<CR>
+vmap <Leader>hr :GV?<CR>
 
 """ Usage notes
 "
