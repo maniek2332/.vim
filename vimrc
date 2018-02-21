@@ -45,6 +45,7 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('plytophogy/vim-virtualenv')
   call dein#add('vim-scripts/YankRing.vim')
   call dein#add('tpope/vim-fugitive')
+  call dein#add('tmhedberg/SimpylFold')
 
   " Required:
   call dein#end()
@@ -87,11 +88,6 @@ set laststatus=2
 
 set splitright  " open splits on right side
 set splitbelow
-
-" autofolding
-"set foldmethod=indent
-"set foldlevel=99
-"set foldnestmax=2
 
 if exists('g:nyaovim_version')
     let g:airline_powerline_fonts = 0  " poor support for nyaovim
@@ -143,6 +139,7 @@ augroup vimrc_python
   autocmd FileType python,cython,pyrex noremap <Leader>B Oimport pdb; pdb.set_trace()  ## XXX<Esc>
   autocmd FileType python,cython,pyrex setlocal list listchars=trail:·,tab:·\ 
   autocmd FileType python,cython,pyrex setlocal nosmartindent
+  autocmd FileType python,cython,pyrex setlocal foldlevel=99
   autocmd BufReadPost python,cython,pyrex if exists('$VIRTUAL_ENV') | VirtualEnvActivate | endif
 augroup END
 
