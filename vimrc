@@ -169,6 +169,8 @@ let g:rainbow_conf = {
 	\	'separately': {
 	\		'*': {},
 	\		'cmake': 0,
+	\		'htmldjango': 0,
+	\		'css': 0,
 	\	}
 	\}
 
