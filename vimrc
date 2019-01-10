@@ -48,6 +48,7 @@ if dein#load_state($HOME . '/.vim/.')
   call dein#add('junegunn/gv.vim')
   call dein#add('airblade/vim-gitgutter')
   call dein#add('tmhedberg/SimpylFold')
+  call dein#add('janko-m/vim-test')
 
   " Required:
   call dein#end()
