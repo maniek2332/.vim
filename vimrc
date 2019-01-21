@@ -189,6 +189,9 @@ let g:rainbow_active = 1
 
 let g:isort_params = '-m 5'
 
+let test#python#runner = "pytest"
+let test#strategy = "vimterminal"
+
 " default autocmd does not work, maybe it conflicts with EasyClip
 " augroup peekaboo2
 "   autocmd!
@@ -431,6 +434,10 @@ nmap <Leader>hc :GV!<CR>
 vmap <Leader>hc :GV!<CR>
 nmap <Leader>hr :GV?<CR>
 vmap <Leader>hr :GV?<CR>
+
+nmap <F8>n :TestNearest --reuse-db
+nmap <F8>c :TestClass --reuse-db
+nmap <F8>f :TestFile --reuse-db
 
 """ Usage notes
 "
