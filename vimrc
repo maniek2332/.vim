@@ -8,59 +8,39 @@ set number
 filetype off
 syntax off
 
-"dein Scripts-----------------------------
-" Required:
-let g:dein_location = $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
-let &runtimepath=&runtimepath . ',' . $HOME . '/.vim/./repos/github.com/Shougo/dein.vim'
 
-" Required:
-if dein#load_state($HOME . '/.vim/.')
-  call dein#begin($HOME . '/.vim/.')
+call plug#begin('~/.vim/plugged')
 
-  " Let dein manage dein
-  " Required:
-  call dein#add($HOME . '/.vim/./repos/github.com/Shougo/dein.vim')
+" Add or remove your plugins here:
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'kien/ctrlp.vim'
+Plug 'luochen1990/rainbow'
+Plug 'vim-airline/vim-airline'
+Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/syntastic'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'tomtom/tcomment_vim'
+Plug 'dyng/ctrlsf.vim'
+Plug 'ervandew/supertab'
+Plug 'tpope/vim-sleuth'
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'lambdalisue/vim-cython-syntax'
+Plug 'pboettch/vim-cmake-syntax'
+Plug 'tpope/vim-repeat'
+Plug 'python-rope/ropevim'
+Plug 'plytophogy/vim-virtualenv'
+Plug 'vim-scripts/YankRing.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'tmhedberg/SimpylFold'
+Plug 'janko-m/vim-test'
 
-  " Add or remove your plugins here:
-  call dein#add('Shougo/neosnippet.vim')
-  call dein#add('Shougo/neosnippet-snippets')
-  call dein#add('kien/ctrlp.vim')
-  call dein#add('luochen1990/rainbow')
-  call dein#add('vim-airline/vim-airline')
-  call dein#add('Valloric/YouCompleteMe', {'build': './install.py'})
-  call dein#add('majutsushi/tagbar')
-  call dein#add('scrooloose/syntastic')
-  call dein#add('scrooloose/nerdcommenter')
-  call dein#add('scrooloose/nerdtree')
-  call dein#add('tomtom/tcomment_vim')
-  call dein#add('dyng/ctrlsf.vim')
-  call dein#add('ervandew/supertab')
-  call dein#add('tpope/vim-sleuth')
-  call dein#add('Vimjas/vim-python-pep8-indent')
-  call dein#add('lambdalisue/vim-cython-syntax')
-  call dein#add('pboettch/vim-cmake-syntax')
-  call dein#add('tpope/vim-repeat')
-  " call dein#add('junegunn/vim-peekaboo')
-  call dein#add('python-rope/ropevim')
-  call dein#add('plytophogy/vim-virtualenv')
-  call dein#add('vim-scripts/YankRing.vim')
-  call dein#add('tpope/vim-fugitive')
-  call dein#add('junegunn/gv.vim')
-  call dein#add('airblade/vim-gitgutter')
-  call dein#add('tmhedberg/SimpylFold')
-  call dein#add('janko-m/vim-test')
+call plug#end()
 
-  " Required:
-  call dein#end()
-  call dein#save_state()
-endif
-
-" If you want to install not installed plugins on startup.
-"if dein#check_install()
-"  call dein#install()
-"endif
-
-"End dein Scripts-------------------------
 
 set bs=indent,eol,start
 set wrap
