@@ -14,7 +14,6 @@ call plug#begin('~/.vim/plugged')
 " Add or remove your plugins here:
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'kien/ctrlp.vim'
 Plug 'luochen1990/rainbow'
 Plug 'vim-airline/vim-airline'
 Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
@@ -38,6 +37,8 @@ Plug 'junegunn/gv.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'tmhedberg/SimpylFold'
 Plug 'janko-m/vim-test'
+Plug '~/.fzf'
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -135,8 +136,6 @@ let g:ropevim_extended_complete = 1
 let g:ropevim_enable_autoimport = 1
 let g:ropevim_autoimport_modules = ["os.*", "traceback", "django.*"]
 
-" let g:ctrlp_working_path_mode = '0'
-
 let g:ycm_auto_trigger = 0
 
 let g:tcommentMapLeaderOp1 = '<Leader>x'
@@ -178,18 +177,6 @@ let test#strategy = "vimterminal"
 "   autocmd FileType * call peekaboo#on()
 " augroup END
 
-if executable('ag')
-  " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
-  set grepprg=ag\ --nogroup\ --nocolor
-  " Use ag in CtrlP for listing files. Lightning fast, respects .gitignore
-  " and .agignore. Ignores hidden files by default.
-  let g:ctrlp_user_command = 'cd %s && ag . -l --nocolor -g ""'
-  let g:ctrlp_use_caching = 0
-else
-  "ctrl+p ignore files in .gitignore
-  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-endif
-
 filetype plugin indent on
 syntax on
 
@@ -224,6 +211,8 @@ let g:yankring_replace_n_pkey = '<Leader>k'
 let g:yankring_replace_n_nkey = '<Leader>K'
 
 let g:gitgutter_map_keys = 0
+
+let g:fzf_command_prefix = 'Fzf'
 
 " Helper function
 function! GetVisualWord()
@@ -416,8 +405,18 @@ nmap <Leader>hr :GV?<CR>
 vmap <Leader>hr :GV?<CR>
 
 nmap <F8>n :TestNearest --reuse-db
+nmap <F8><F8> :TestNearest --reuse-db
 nmap <F8>c :TestClass --reuse-db
 nmap <F8>f :TestFile --reuse-db
+
+" fzf bindings
+nmap <C-p> :FzfFiles<CR>
+nmap <C-p><C-p> :FzfFiles<CR>
+nmap <C-p>f :FzfFiles<CR>
+nmap <C-p>b :FzfBuffers<CR>
+nmap <C-p>g :FzfGFiles<CR>
+nmap <C-p>G :FzfGFiles?<CR>
+nmap <C-p>t :FzfTags<CR>
 
 """ Usage notes
 "
