@@ -124,6 +124,7 @@ augroup vimrc_python
   autocmd FileType python,cython,pyrex setlocal list listchars=trail:·,tab:·\ 
   autocmd FileType python,cython,pyrex setlocal nosmartindent
   autocmd FileType python,cython,pyrex setlocal foldlevel=99
+  autocmd FileType python,cython,pyrex setlocal commentstring=\#\ %s
   autocmd BufReadPost python,cython,pyrex if exists('$VIRTUAL_ENV') | VirtualEnvActivate | endif
 augroup END
 
