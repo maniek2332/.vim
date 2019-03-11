@@ -410,8 +410,8 @@ nmap <F8>c :TestClass --reuse-db
 nmap <F8>f :TestFile --reuse-db
 
 " fzf bindings
-nmap <C-p> :FzfFiles<CR>
-nmap <C-p><C-p> :FzfFiles<CR>
+nmap <C-p> :FzfGFiles<CR>
+nmap <C-p><C-p> :FzfGFiles<CR>
 nmap <C-p>f :FzfFiles<CR>
 nmap <C-p>b :FzfBuffers<CR>
 nmap <C-p>g :FzfGFiles<CR>
