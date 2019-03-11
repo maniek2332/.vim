@@ -139,7 +139,7 @@ let g:ropevim_autoimport_modules = ["os.*", "traceback", "django.*"]
 
 let g:ycm_auto_trigger = 0
 
-let g:tcommentMapLeaderOp1 = '<Leader>x'
+let g:tcomment_opleader1 = '<Leader>x'
 
 let g:ycm_key_list_select_completion = ['<Down>']
 let g:ycm_key_list_previous_completion = ['<Up>']
