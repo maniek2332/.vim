@@ -1,6 +1,7 @@
 /session_last.vim
 /bundle/
 /spell/
+/autoload/plug.vim
 /plugged/
 /.cache
 /cache_nvim
