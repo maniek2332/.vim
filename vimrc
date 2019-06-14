@@ -16,6 +16,7 @@ let g:vimrc_cython_syntax = g:vimrc_load_plugins && 1
 let g:vimrc_cmake_syntax = g:vimrc_load_plugins && 1
 let g:vimrc_rainbow = g:vimrc_load_plugins && 1
 let g:vimrc_alternates = g:vimrc_load_plugins && 1
+let g:vimrc_git_utils = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -52,6 +53,11 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_alternates
     Plug 'LucHermitte/alternate-lite'
+  endif
+  if g:vimrc_git_utils
+    Plug 'tpope/vim-fugitive'
+    Plug 'junegunn/gv.vim'
+    Plug 'airblade/vim-gitgutter'
   endif
   call plug#end()
 endif
@@ -168,6 +174,13 @@ if g:vimrc_rainbow
         \}
 endif " g:vimrc_rainbow
 
+if g:vimrc_git_utils
+  augroup vimrc_git_utils_gitgutter
+    autocmd!
+    autocmd BufWritePost * GitGutter
+  augroup END
+endif " g:vimrc_git_utils
+
 
 " *** Keybindings
 
@@ -225,3 +238,25 @@ if g:vimrc_alternates
   noremap <Leader>as :AS<CR>
   noremap <Leader>at :AT<CR>
 endif " g:vimrc_alternates
+
+if g:vimrc_git_utils
+  " Gitgutter showing changes and hunks navigation
+  nmap <silent> <Leader>hh :GitGutter<CR>
+  nmap ]h <Plug>GitGutterNextHunk
+  nmap [h <Plug>GitGutterPrevHunk
+  nmap <Leader>hs <Plug>GitGutterStageHunk
+  nmap <Leader>hu <Plug>GitGutterUndoHunk
+  nmap <Leader>hp <Plug>GitGutterPreviewHunk
+  omap ih <Plug>GitGutterTextObjectInnerPending
+  omap ah <Plug>GitGutterTextObjectOuterPending
+  xmap ih <Plug>GitGutterTextObjectInnerVisual
+  xmap ah <Plug>GitGutterTextObjectOuterVisual
+
+  " GV bindings (general navigation, current file only, file revisions list)
+  nmap <Leader>ht :GV<CR>
+  vmap <Leader>ht :GV<CR>
+  nmap <Leader>hc :GV!<CR>
+  vmap <Leader>hc :GV!<CR>
+  nmap <Leader>hr :GV?<CR>
+  vmap <Leader>hr :GV?<CR>
+endif " g:vimrc_git_utils
