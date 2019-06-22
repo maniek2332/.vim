@@ -17,6 +17,8 @@ let g:vimrc_cmake_syntax = g:vimrc_load_plugins && 1
 let g:vimrc_rainbow = g:vimrc_load_plugins && 1
 let g:vimrc_alternates = g:vimrc_load_plugins && 1
 let g:vimrc_git_utils = g:vimrc_load_plugins && 1
+let g:vimrc_test_runner = g:vimrc_load_plugins && 1
+let g:vimrc_commenter = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -58,6 +60,12 @@ if g:vimrc_load_plugins
     Plug 'tpope/vim-fugitive'
     Plug 'junegunn/gv.vim'
     Plug 'airblade/vim-gitgutter'
+  endif
+  if g:vimrc_test_runner
+    Plug 'janko-m/vim-test'
+  endif
+  if g:vimrc_commenter
+    Plug 'tomtom/tcomment_vim'
   endif
   call plug#end()
 endif
@@ -181,6 +189,15 @@ if g:vimrc_git_utils
   augroup END
 endif " g:vimrc_git_utils
 
+if g:vimrc_test_runner
+  let test#python#runner = "pytest"
+  let test#strategy = "vimterminal"
+endif " g:vimrc_test_runner
+
+if g:vimrc_commenter
+  let g:tcomment_opleader1 = '<Leader>x'
+endif " g:vimrc_commenter
+
 
 " *** Keybindings
 
@@ -260,3 +277,14 @@ if g:vimrc_git_utils
   nmap <Leader>hr :GV?<CR>
   vmap <Leader>hr :GV?<CR>
 endif " g:vimrc_git_utils
+
+if g:vimrc_test_runner
+  nmap <F8>n :TestNearest --reuse-db
+  nmap <F8>f :TestFile --reuse-db
+  nmap <F8>l :TestLast --reuse-db
+  nmap <F8><F8> :TestLast --reuse-db
+endif " g:vimrc_test_runner
+
+if g:vimrc_commenter
+  nmap <Leader>xx <Leader>xc
+endif " g:vimrc_commenter
