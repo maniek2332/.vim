@@ -19,6 +19,7 @@ let g:vimrc_alternates = g:vimrc_load_plugins && 1
 let g:vimrc_git_utils = g:vimrc_load_plugins && 1
 let g:vimrc_test_runner = g:vimrc_load_plugins && 1
 let g:vimrc_commenter = g:vimrc_load_plugins && 1
+let g:vimrc_ctrlsf = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -66,6 +67,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_commenter
     Plug 'tomtom/tcomment_vim'
+  endif
+  if g:vimrc_ctrlsf
+    Plug 'dyng/ctrlsf.vim'
   endif
   call plug#end()
 endif
@@ -288,3 +292,15 @@ endif " g:vimrc_test_runner
 if g:vimrc_commenter
   nmap <Leader>xx <Leader>xc
 endif " g:vimrc_commenter
+
+if g:vimrc_ctrlsf
+  nmap <C-F>f <Plug>CtrlSFPrompt
+  vmap <C-F>f <Plug>CtrlSFVwordPath
+  vmap <C-F>F <Plug>CtrlSFVwordExec
+  nmap <C-F>n <Plug>CtrlSFCwordPath
+  nmap <C-F>p <Plug>CtrlSFPwordPath
+  nnoremap <C-F>o :CtrlSFOpen<CR>
+  nnoremap <C-F>t :CtrlSFToggle<CR>
+  inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+  map <C-F>  <nop>
+endif
