@@ -4,8 +4,8 @@ set exrc
 " *** VIMRC controls
 let g:vimrc_undofile = 1
 let g:vimrc_mouse = 1
-let g:vimrc_colorscheme = 1
-let g:vimrc_colorscheme_mods = 1
+let g:vimrc_colorscheme_wombat = 0
+let g:vimrc_colorscheme_wombat_mods = 0
 let g:vimrc_console_title = 1
 let g:vimrc_load_plugins = 1
 let g:vimrc_lsp = g:vimrc_load_plugins && 1
@@ -20,6 +20,7 @@ let g:vimrc_git_utils = g:vimrc_load_plugins && 1
 let g:vimrc_test_runner = g:vimrc_load_plugins && 1
 let g:vimrc_commenter = g:vimrc_load_plugins && 1
 let g:vimrc_ctrlsf = g:vimrc_load_plugins && 1
+let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -30,6 +31,9 @@ endif
 if g:vimrc_load_plugins
   call plug#begin('~/.vim/plugged')
   Plug 'LucHermitte/lh-vim-lib'
+  if g:vimrc_colorscheme_gruvbox
+    Plug 'morhetz/gruvbox'
+  endif " g:vimrc_colorscheme_gruvbox
   if g:vimrc_lsp
     Plug 'prabirshrestha/async.vim'
     Plug 'prabirshrestha/vim-lsp'
@@ -110,14 +114,14 @@ if g:vimrc_mouse
   set mouse=a
 endif " g:vimrc_mouse
 
-if g:vimrc_colorscheme
+if g:vimrc_colorscheme_wombat
   if has("gui_running")
     colorscheme wombat
     set guifont=Monospace\ 9
   else
     colorscheme wombat256
   endif
-endif " g:vimrc_colorscheme
+endif " g:vimrc_colorscheme_wombat
 
 if g:vimrc_console_title && !has("gui_running")
     " setting console window title
@@ -129,12 +133,18 @@ if g:vimrc_console_title && !has("gui_running")
     set title
 endif " g:vimrc_console_title
 
-if g:vimrc_colorscheme_mods
+if g:vimrc_colorscheme_wombat_mods
   highlight ColorColumn ctermbg=235 guibg=#303030
   if g:vimrc_lsp
     highlight lspReference ctermfg=white guifg=white ctermbg=darkgray guibg=darkgray
   endif
-endif " g:vimrc_colorscheme_mods
+endif " g:vimrc_colorscheme_wombat_mods
+
+if g:vimrc_colorscheme_gruvbox
+  let g:gruvbox_italic = 1
+  colorscheme gruvbox
+  set background=dark
+endif " g:vimrc_colorscheme_gruvbox
 
 " *** Plugins configuration
 if g:vimrc_lsp
