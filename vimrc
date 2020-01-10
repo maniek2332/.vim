@@ -152,7 +152,7 @@ if g:vimrc_lsp
     " pip install python-language-server
     au User lsp_setup call lsp#register_server({
           \ 'name': 'pyls',
-          \ 'cmd': {server_info->['pyls']},
+          \ 'cmd': {server_info->[&shell, &shellcmdflag, 'PYTHONPATH=${PYTHONPATH}:. pyls']},
           \ 'whitelist': ['python'],
           \ })
   endif
