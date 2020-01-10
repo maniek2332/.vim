@@ -7,6 +7,7 @@ let g:vimrc_mouse = 1
 let g:vimrc_colorscheme_wombat = 0
 let g:vimrc_colorscheme_wombat_mods = 0
 let g:vimrc_console_title = 1
+let g:vimrc_auto_readwrite = 1
 let g:vimrc_load_plugins = 1
 let g:vimrc_lsp = g:vimrc_load_plugins && 1
 let g:vimrc_lsp_completion = g:vimrc_lsp && 1
@@ -105,6 +106,8 @@ if $TERM == "xterm" || $TERM == "screen-bce"
     set t_Co=256
 endif
 
+set wildmenu
+
 if g:vimrc_undofile
   set undofile
   set undodir=~/.vim/undos/
@@ -132,6 +135,16 @@ if g:vimrc_console_title && !has("gui_running")
     endif
     set title
 endif " g:vimrc_console_title
+
+if g:vimrc_auto_readwrite
+    set autoread
+
+    augroup vimrc_auto_readwrite
+        autocmd!
+        autocmd FocusGained,BufEnter * :silent! !
+        autocmd FocusLost,WinLeave * :silent! noautocmd w
+    augroup END
+endif " g:vimrc_auto_readwrite
 
 if g:vimrc_colorscheme_wombat_mods
   highlight ColorColumn ctermbg=235 guibg=#303030
