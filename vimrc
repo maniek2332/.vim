@@ -255,6 +255,18 @@ inoremap <F12> <Esc>:set paste!<CR>:set paste?<CR>a
 vnoremap <F12> :set paste!<CR>:set paste?<CR>
 cnoremap <F12> :set paste!<CR>:set paste?<CR>
 
+if g:vimrc_lsp
+    map <Leader>ld <plug>(lsp-definition)
+    map <Leader>lD <plug>(lsp-declaration)
+    map <Leader>lA <plug>(lsp-code-action)
+    map <Leader>lC <plug>(lsp-document-diagnostics)
+    map <Leader>lF <plug>(lsp-document-format)
+    map <Leader>lr <plug>(lsp-reference)
+    map <Leader>lh <plug>(lsp-hover)
+    map <Leader>ls <plug>(lsp-document-symbol)
+    map <Leader>lS <plug>(lsp-workspace-symbol)
+endif " g:vimrc_lsp
+
 if g:vimrc_lsp_completion
   imap <C-Space> <Plug>(asyncomplete_force_refresh)
   inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
