@@ -142,7 +142,7 @@ if g:vimrc_auto_readwrite
     augroup vimrc_auto_readwrite
         autocmd!
         autocmd FocusGained,BufEnter * :silent! !
-        autocmd FocusLost,WinLeave * :silent! noautocmd w
+        autocmd FocusLost,WinLeave * :silent! noautocmd update
     augroup END
 endif " g:vimrc_auto_readwrite
 
