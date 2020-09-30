@@ -21,6 +21,7 @@ let g:vimrc_git_utils = g:vimrc_load_plugins && 1
 let g:vimrc_test_runner = g:vimrc_load_plugins && 1
 let g:vimrc_commenter = g:vimrc_load_plugins && 1
 let g:vimrc_ctrlsf = g:vimrc_load_plugins && 1
+let g:vimrc_vista = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -75,6 +76,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_ctrlsf
     Plug 'dyng/ctrlsf.vim'
+  endif
+  if g:vimrc_vista
+    Plug 'liuchengxu/vista.vim'
   endif
   call plug#end()
 endif
@@ -225,6 +229,10 @@ if g:vimrc_commenter
   let g:tcomment_opleader1 = '<Leader>x'
 endif " g:vimrc_commenter
 
+if g:vimrc_vista
+  let g:vista_ctags_executable = 'ctags-universal'
+endif
+
 
 " *** Keybindings
 
@@ -338,4 +346,11 @@ if g:vimrc_ctrlsf
   nnoremap <C-F>t :CtrlSFToggle<CR>
   inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
   map <C-F>  <nop>
+endif
+
+if g:vimrc_vista
+  nnoremap <silent> <F7> :Vista!!<CR>
+  nnoremap <silent> g<F7> :Vista vim_lsp<CR>
+  nnoremap <silent> <C-p>y :Vista finder<CR>
+  nnoremap <silent> <C-p>gy :Vista finder vim_lsp<CR>
 endif
