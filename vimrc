@@ -306,15 +306,15 @@ endif " g:vimrc_alternates
 if g:vimrc_git_utils
   " Gitgutter showing changes and hunks navigation
   nmap <silent> <Leader>hh :GitGutter<CR>
-  nmap ]h <Plug>GitGutterNextHunk
-  nmap [h <Plug>GitGutterPrevHunk
-  nmap <Leader>hs <Plug>GitGutterStageHunk
-  nmap <Leader>hu <Plug>GitGutterUndoHunk
-  nmap <Leader>hp <Plug>GitGutterPreviewHunk
-  omap ih <Plug>GitGutterTextObjectInnerPending
-  omap ah <Plug>GitGutterTextObjectOuterPending
-  xmap ih <Plug>GitGutterTextObjectInnerVisual
-  xmap ah <Plug>GitGutterTextObjectOuterVisual
+  nmap ]h <Plug>(GitGutterNextHunk)
+  nmap [h <Plug>(GitGutterPrevHunk)
+  nmap <Leader>hs <Plug>(GitGutterStageHunk)
+  nmap <Leader>hu <Plug>(GitGutterUndoHunk)
+  nmap <Leader>hp <Plug>(GitGutterPreviewHunk)
+  omap ih <Plug>(GitGutterTextObjectInnerPending)
+  omap ah <Plug>(GitGutterTextObjectOuterPending)
+  xmap ih <Plug>(GitGutterTextObjectInnerVisual)
+  xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
   " GV bindings (general navigation, current file only, file revisions list)
   nmap <Leader>ht :GV<CR>
