@@ -22,6 +22,8 @@ let g:vimrc_test_runner = g:vimrc_load_plugins && 1
 let g:vimrc_commenter = g:vimrc_load_plugins && 1
 let g:vimrc_ctrlsf = g:vimrc_load_plugins && 1
 let g:vimrc_vista = g:vimrc_load_plugins && 1
+let g:vimrc_python_fold = g:vimrc_load_plugins && 1
+let g:vimrc_custom_foldtext = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -79,6 +81,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_vista
     Plug 'liuchengxu/vista.vim'
+  endif
+  if g:vimrc_python_fold
+    Plug 'tmhedberg/SimpylFold'
   endif
   call plug#end()
 endif
@@ -158,6 +163,11 @@ if g:vimrc_colorscheme_wombat_mods
 endif " g:vimrc_colorscheme_wombat_mods
 
 if g:vimrc_colorscheme_gruvbox
+  augroup colorscheme_gruvbox_override
+      autocmd!
+      autocmd ColorScheme * highlight Folded ctermfg=253 guifg=#dededd
+  augroup END
+
   let g:gruvbox_italic = 1
   colorscheme gruvbox
   set background=dark
@@ -232,6 +242,32 @@ endif " g:vimrc_commenter
 if g:vimrc_vista
   let g:vista_ctags_executable = 'ctags-universal'
 endif
+
+if g:vimrc_custom_foldtext
+  "" Taken from: http://gregsexton.org/2011/03/improving-the-text-displayed-in-a-fold/
+  fu! CustomFoldText()
+    "get first non-blank line
+    let fs = v:foldstart
+    while getline(fs) =~ '^\s*$' | let fs = nextnonblank(fs + 1)
+    endwhile
+    if fs > v:foldend
+      let line = getline(v:foldstart)
+    else
+      let line = substitute(getline(fs), '\t', repeat(' ', &tabstop), 'g')
+    endif
+
+    let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
+    let foldSize = 1 + v:foldend - v:foldstart
+    let foldSizeStr = " " . foldSize . " lines "
+    let foldLevelStr = repeat("+--", v:foldlevel)
+    let lineCount = line("$")
+    let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
+    let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
+    return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
+  endf
+
+  set foldtext=CustomFoldText()
+endif " g:vimrc_custom_foldtext
 
 
 " *** Keybindings
