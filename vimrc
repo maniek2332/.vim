@@ -24,6 +24,7 @@ let g:vimrc_ctrlsf = g:vimrc_load_plugins && 1
 let g:vimrc_vista = g:vimrc_load_plugins && 1
 let g:vimrc_python_fold = g:vimrc_load_plugins && 1
 let g:vimrc_custom_foldtext = g:vimrc_load_plugins && 1
+let g:vimrc_fast_fold = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -84,6 +85,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_python_fold
     Plug 'tmhedberg/SimpylFold'
+  endif
+  if g:vimrc_fast_fold
+    Plug 'Konfekt/FastFold'
   endif
   call plug#end()
 endif
@@ -269,6 +273,11 @@ if g:vimrc_custom_foldtext
   set foldtext=CustomFoldText()
 endif " g:vimrc_custom_foldtext
 
+if g:vimrc_fast_fold
+  let g:fastfold_savehook = 1
+  let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
+  let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+endif " g:vimrc_fast_fold
 
 " *** Keybindings
 
@@ -390,3 +399,7 @@ if g:vimrc_vista
   nnoremap <silent> <C-p>y :Vista finder<CR>
   nnoremap <silent> <C-p>gy :Vista finder vim_lsp<CR>
 endif
+
+if g:vimrc_fast_fold
+  nmap zuz <Plug>(FastFoldUpdate)
+endif " g:vimrc_fast_fold
