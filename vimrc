@@ -25,6 +25,9 @@ let g:vimrc_vista = g:vimrc_load_plugins && 1
 let g:vimrc_python_fold = g:vimrc_load_plugins && 1
 let g:vimrc_custom_foldtext = g:vimrc_load_plugins && 1
 let g:vimrc_fast_fold = g:vimrc_load_plugins && 1
+let g:vimrc_sneak = g:vimrc_load_plugins && 1
+let g:vimrc_surround = g:vimrc_load_plugins && 1
+let g:vimrc_repeat = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -88,6 +91,15 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_fast_fold
     Plug 'Konfekt/FastFold'
+  endif
+  if g:vimrc_sneak
+    Plug 'justinmk/vim-sneak'
+  endif
+  if g:vimrc_surround
+    Plug 'tpope/vim-surround'
+  endif
+  if g:vimrc_repeat
+    Plug 'tpope/vim-repeat'
   endif
   call plug#end()
 endif
