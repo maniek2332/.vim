@@ -1,3 +1,4 @@
+" vim: sw=2
 set nocompatible
 set exrc
 
@@ -28,6 +29,7 @@ let g:vimrc_fast_fold = g:vimrc_load_plugins && 1
 let g:vimrc_sneak = g:vimrc_load_plugins && 1
 let g:vimrc_surround = g:vimrc_load_plugins && 1
 let g:vimrc_repeat = g:vimrc_load_plugins && 1
+let g:vimrc_notational_fzf = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -100,6 +102,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_repeat
     Plug 'tpope/vim-repeat'
+  endif
+  if g:vimrc_notational_fzf
+    Plug 'Alok/notational-fzf-vim'
   endif
   call plug#end()
 endif
@@ -415,3 +420,18 @@ endif
 if g:vimrc_fast_fold
   nmap zuz <Plug>(FastFoldUpdate)
 endif " g:vimrc_fast_fold
+
+
+if g:vimrc_notational_fzf
+  " taking notes
+  nnoremap <silent> <C-p>n :NV<CR>
+  " fullscreen version
+  nnoremap <silent> <C-p>N :NV!<CR>
+  " bindings inside search window:
+  "  - <C-x> create new
+  "  - <C-v> open vertical
+  "  - <C-s> open horizontal
+  "  - <C-t> open tab
+  "  - <C-y> yank selected filename
+  "  - <Enter> open in current buffer
+endif " g:vimrc_notational_fzf
