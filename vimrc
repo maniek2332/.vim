@@ -205,7 +205,13 @@ if g:vimrc_lsp
           \ })
   endif
 
-  if executable('clangd-8')
+  if executable('clangd-10')
+    au User lsp_setup call lsp#register_server({
+          \ 'name': 'clangd',
+          \ 'cmd': {server_info->['clangd-10', '-background-index']},
+          \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+          \ })
+  elseif executable('clangd-8')
     au User lsp_setup call lsp#register_server({
           \ 'name': 'clangd',
           \ 'cmd': {server_info->['clangd-8', '-background-index']},
