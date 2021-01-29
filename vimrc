@@ -30,6 +30,7 @@ let g:vimrc_sneak = g:vimrc_load_plugins && 1
 let g:vimrc_surround = g:vimrc_load_plugins && 1
 let g:vimrc_repeat = g:vimrc_load_plugins && 1
 let g:vimrc_notational_fzf = g:vimrc_load_plugins && 1
+let g:vimrc_lightline = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -105,6 +106,10 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_notational_fzf
     Plug 'Alok/notational-fzf-vim'
+  endif
+  if g:vimrc_lightline
+    Plug 'itchyny/lightline.vim'
+    Plug 'mgedmin/taghelper.vim'
   endif
   call plug#end()
 endif
@@ -301,6 +306,34 @@ if g:vimrc_fast_fold
   let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
   let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
 endif " g:vimrc_fast_fold
+
+if g:vimrc_lightline
+  set laststatus=2
+  let g:lightline = {
+  \ 'mode_map': {
+  \ 'n' : 'N',
+  \ 'i' : 'I',
+  \ 'R' : 'R',
+  \ 'v' : 'V',
+  \ 'V' : 'VL',
+  \ "\<C-v>": 'VB',
+  \ 'c' : 'C',
+  \ 's' : 'S',
+  \ 'S' : 'SL',
+  \ "\<C-s>": 'SB',
+  \ 't': 'T',
+  \ },
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste', 'filename' ],
+  \             [ 'gitbranch', 'readonly', 'modified' ],
+  \             [ 'funcname' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'FugitiveHead',
+  \   'funcname': 'taghelper#curtag',
+  \ },
+\ }
+endif " g:vimrc_lightline
 
 " *** Keybindings
 
