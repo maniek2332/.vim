@@ -31,6 +31,7 @@ let g:vimrc_surround = g:vimrc_load_plugins && 1
 let g:vimrc_repeat = g:vimrc_load_plugins && 1
 let g:vimrc_notational_fzf = g:vimrc_load_plugins && 1
 let g:vimrc_lightline = g:vimrc_load_plugins && 1
+let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -111,6 +112,10 @@ if g:vimrc_load_plugins
     Plug 'itchyny/lightline.vim'
     Plug 'mgedmin/taghelper.vim'
   endif
+  if g:vimrc_gutentags
+    Plug 'ludovicchabant/vim-gutentags'
+  endif
+
   call plug#end()
 endif
 
