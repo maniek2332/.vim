@@ -142,6 +142,7 @@ if $TERM == "xterm" || $TERM == "screen-bce"
 endif
 
 set wildmenu
+set wildmode=list:longest,full
 
 if g:vimrc_undofile
   set undofile
@@ -198,6 +199,13 @@ if g:vimrc_colorscheme_gruvbox
   colorscheme gruvbox
   set background=dark
 endif " g:vimrc_colorscheme_gruvbox
+
+augroup BgHighlight
+  autocmd!
+  autocmd WinEnter * set cursorline
+  autocmd WinLeave * set nocursorline
+augroup END
+
 
 " *** Plugins configuration
 if g:vimrc_lsp
