@@ -310,29 +310,84 @@ endif " g:vimrc_fast_fold
 if g:vimrc_lightline
   set laststatus=2
   let g:lightline = {
-  \ 'mode_map': {
-  \ 'n' : 'N',
-  \ 'i' : 'I',
-  \ 'R' : 'R',
-  \ 'v' : 'V',
-  \ 'V' : 'VL',
-  \ "\<C-v>": 'VB',
-  \ 'c' : 'C',
-  \ 's' : 'S',
-  \ 'S' : 'SL',
-  \ "\<C-s>": 'SB',
-  \ 't': 'T',
-  \ },
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste', 'filename' ],
-  \             [ 'gitbranch', 'readonly', 'modified' ],
-  \             [ 'funcname' ] ]
-  \ },
-  \ 'component_function': {
-  \   'gitbranch': 'FugitiveHead',
-  \   'funcname': 'taghelper#curtag',
-  \ },
-\ }
+    \ 'colorscheme': 'ayu_dark_modified',
+    \ 'mode_map': {
+    \ 'n' : 'N',
+    \ 'i' : 'I',
+    \ 'R' : 'R',
+    \ 'v' : 'V',
+    \ 'V' : 'VL',
+    \ "\<C-v>": 'VB',
+    \ 'c' : 'C',
+    \ 's' : 'S',
+    \ 'S' : 'SL',
+    \ "\<C-s>": 'SB',
+    \ 't': 'T',
+    \ },
+    \ 'active': {
+    \   'left': [ [ 'mode', 'paste', 'filename' ],
+    \             [ 'funcname' ],
+    \             [ 'gitbranch', 'readonly', 'modified' ] ],
+    \   'right': [ [ 'lineinfo' ],
+    \              [ 'percent' ],
+    \              [ 'fileformat', 'fileencoding', 'filetype' ] ],
+    \ },
+    \ 'inactive': {
+    \   'left': [ [ 'filename' ],
+    \             [ 'funcname' ] ],
+    \   'right': [ [ 'lineinfo' ],
+    \              [ 'percent' ] ],
+    \ },
+    \ 'tab': {
+    \   'active': [ 'tabnum', 'filename', 'tabwinnum', 'modified' ],
+    \   'inactive': [ 'tabnum', 'filename', 'tabwinnum', 'modified' ],
+    \ },
+    \ 'component_function': {
+    \   'gitbranch': 'FugitiveHead',
+    \   'funcname': 'LightlineFuncname',
+    \   'fileformat': 'LightlineFileformat',
+    \   'filetype': 'LightlineFiletype',
+    \   'fileencoding': 'LightlineFileencoding',
+    \ },
+  \ }
+
+  let g:lightline.tab_component_function = {
+    \ 'filename': 'lightline#tab#filename',
+    \ 'modified': 'lightline#tab#modified',
+    \ 'readonly': 'lightline#tab#readonly',
+    \ 'tabnum': 'lightline#tab#tabnum',
+    \ 'tabwinnum': 'LightlineTabWinnr',
+  \ }
+
+  function! LightlineFuncname()
+    let maxwidth = winwidth(0) - 60
+    let l:maxwidth = l:maxwidth > 20 ? l:maxwidth : 20
+    let funcname = taghelper#curtag()
+    if l:funcname != ''
+      let l:funcname = l:funcname[1:len(l:funcname) - 2]
+      if len(l:funcname) > l:maxwidth
+        let l:funcname = '<' . l:funcname[-l:maxwidth:]
+      endif
+    endif
+    return l:funcname
+  endfunction
+
+  function! LightlineFileformat()
+    return winwidth(0) > 130 ? &fileformat : ''
+  endfunction
+
+  function! LightlineFiletype()
+    return winwidth(0) > 130 ? (&filetype !=# '' ? &filetype : 'no ft') : ''
+  endfunction
+
+  function! LightlineFileencoding()
+    return winwidth(0) > 130 ? &fileencoding : ''
+  endfunction
+
+  function! LightlineTabWinnr(n)
+    let tabwinnum = len(gettabinfo(a:n)[0]['windows'])
+    return tabwinnum > 1 ? ('/' . tabwinnum) : ''
+  endfunction
 endif " g:vimrc_lightline
 
 " *** Keybindings
