@@ -456,9 +456,10 @@ if g:vimrc_fzf
   nmap <C-p><C-p> :FzfFiles<CR>
   nmap <C-p>f :FzfFiles<CR>
   nmap <C-p>b :FzfBuffers<CR>
-  nmap <C-p>g :FzfGFiles<CR>
-  nmap <C-p>G :FzfGFiles?<CR>
-  nmap <C-p>t :FzfTags<CR>
+  nmap <C-p>G :FzfGFiles<CR>
+  nmap <C-p>g :FzfGFiles?<CR>
+  nmap <C-p>t :FzfBTags<CR>
+  nmap <C-p>T :FzfTags<CR>
 endif " g:vimrc_fzf
 
 if g:vimrc_rainbow
@@ -521,7 +522,7 @@ if g:vimrc_vista
   nnoremap <silent> <F7> :Vista!!<CR>
   nnoremap <silent> g<F7> :Vista vim_lsp<CR>
   nnoremap <silent> <C-p>y :Vista finder<CR>
-  nnoremap <silent> <C-p>gy :Vista finder vim_lsp<CR>
+  nnoremap <silent> <C-p>Y :Vista finder vim_lsp<CR>
 endif
 
 if g:vimrc_fast_fold
