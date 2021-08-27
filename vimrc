@@ -10,29 +10,39 @@ let g:vimrc_colorscheme_wombat_mods = 0
 let g:vimrc_console_title = 1
 let g:vimrc_auto_readwrite = 1
 let g:vimrc_load_plugins = 1
-let g:vimrc_lsp = g:vimrc_load_plugins && 1
-let g:vimrc_lsp_completion = g:vimrc_lsp && 1
-let g:vimrc_fzf = g:vimrc_load_plugins && 1
-let g:vimrc_python_indent = g:vimrc_load_plugins && 1
-let g:vimrc_cython_syntax = g:vimrc_load_plugins && 1
-let g:vimrc_cmake_syntax = g:vimrc_load_plugins && 1
-let g:vimrc_rainbow = g:vimrc_load_plugins && 1
-let g:vimrc_alternates = g:vimrc_load_plugins && 1
+let g:vimrc_load_nvim_plugins = g:vimrc_load_plugins && has("nvim") && 1
+
+let g:vimrc_lsp = g:vimrc_load_plugins && 0
+let g:vimrc_lsp_completion = g:vimrc_lsp && 0
+let g:vimrc_fzf = g:vimrc_load_plugins && 0
+let g:vimrc_python_indent = g:vimrc_load_plugins && 0
+let g:vimrc_cython_syntax = g:vimrc_load_plugins && 0
+let g:vimrc_cmake_syntax = g:vimrc_load_plugins && 0
+let g:vimrc_rainbow = g:vimrc_load_plugins && 0
+let g:vimrc_alternates = g:vimrc_load_plugins && 0
 let g:vimrc_git_utils = g:vimrc_load_plugins && 1
-let g:vimrc_test_runner = g:vimrc_load_plugins && 1
+let g:vimrc_test_runner = g:vimrc_load_plugins && 0
 let g:vimrc_commenter = g:vimrc_load_plugins && 1
-let g:vimrc_ctrlsf = g:vimrc_load_plugins && 1
-let g:vimrc_vista = g:vimrc_load_plugins && 1
-let g:vimrc_python_fold = g:vimrc_load_plugins && 1
-let g:vimrc_custom_foldtext = g:vimrc_load_plugins && 1
-let g:vimrc_fast_fold = g:vimrc_load_plugins && 1
-let g:vimrc_sneak = g:vimrc_load_plugins && 1
-let g:vimrc_surround = g:vimrc_load_plugins && 1
-let g:vimrc_repeat = g:vimrc_load_plugins && 1
-let g:vimrc_notational_fzf = g:vimrc_load_plugins && 1
+let g:vimrc_ctrlsf = g:vimrc_load_plugins && 0
+let g:vimrc_vista = g:vimrc_load_plugins && 0
+let g:vimrc_python_fold = g:vimrc_load_plugins && 0
+let g:vimrc_custom_foldtext = g:vimrc_load_plugins && 0
+let g:vimrc_fast_fold = g:vimrc_load_plugins && 0
+let g:vimrc_sneak = g:vimrc_load_plugins && 0
+let g:vimrc_surround = g:vimrc_load_plugins && 0
+let g:vimrc_repeat = g:vimrc_load_plugins && 0
+let g:vimrc_notational_fzf = g:vimrc_load_plugins && 0
 let g:vimrc_lightline = g:vimrc_load_plugins && 1
 let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
+
+let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_compe = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_vsnip = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_which_key = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_telescope = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_polyglot = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -115,6 +125,29 @@ if g:vimrc_load_plugins
   if g:vimrc_gutentags
     Plug 'ludovicchabant/vim-gutentags'
   endif
+  if g:vimrc_nvim_lspconfig
+    Plug 'neovim/nvim-lspconfig'
+  endif
+  if g:vimrc_compe
+    Plug 'hrsh7th/nvim-compe'
+  endif
+  if g:vimrc_vsnip
+    Plug 'hrsh7th/vim-vsnip'
+    Plug 'rafamadriz/friendly-snippets', { 'branch': 'main' }
+  endif
+  if g:vimrc_which_key
+    Plug 'folke/which-key.nvim', { 'branch': 'main' }
+  endif
+  if g:vimrc_telescope
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
+  endif
+  if g:vimrc_polyglot
+    Plug 'sheerun/vim-polyglot'
+  endif
+  if g:vimrc_chadtree
+    Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+  endif
 
   call plug#end()
 endif
@@ -147,21 +180,27 @@ if $TERM == "xterm" || $TERM == "screen-bce"
 endif
 
 set wildmenu
-set wildmode=list:longest,full
+set wildmode=full
+set wildoptions=pum,tagfile
 
 if g:vimrc_undofile
   set undofile
-  set undodir=~/.vim/undos/
+  if has('nvim')
+    set undodir=~/.vim/undos_nvim/
+  else
+    set undodir=~/.vim/undos/
+  endif
 endif
 
 if g:vimrc_mouse
   set mouse=a
 endif " g:vimrc_mouse
 
+set guifont=Monospace\ 9
+
 if g:vimrc_colorscheme_wombat
   if has("gui_running")
     colorscheme wombat
-    set guifont=Monospace\ 9
   else
     colorscheme wombat256
   endif
@@ -322,6 +361,7 @@ endif " g:vimrc_fast_fold
 
 if g:vimrc_lightline
   set laststatus=2
+  set noshowmode
   let g:lightline = {
     \ 'colorscheme': 'ayu_dark_modified',
     \ 'mode_map': {
@@ -402,6 +442,98 @@ if g:vimrc_lightline
     return tabwinnum > 1 ? ('/' . tabwinnum) : ''
   endfunction
 endif " g:vimrc_lightline
+
+if g:vimrc_nvim_lspconfig
+lua << EOF
+  local lspconfig = require('lspconfig')
+
+  -- lspconfig.pylsp.setup(coq.lsp_ensure_capabilities({}))
+  -- lspconfig.pylsp.setup({})
+  -- lspconfig.jedi_language_server.setup({})
+  lspconfig.pyright.setup({})
+  lspconfig.clangd.setup({cmd = { 'clangd-10', '--background-index' }})
+EOF
+endif " g:vimrc_coq_completion
+
+if g:vimrc_compe
+  set completeopt=menuone,noselect
+
+  let g:compe = {}
+  let g:compe.enabled = v:true
+  let g:compe.autocomplete = v:true
+  let g:compe.debug = v:false
+  let g:compe.min_length = 1
+  let g:compe.preselect = 'enable'
+  let g:compe.throttle_time = 80
+  let g:compe.source_timeout = 200
+  let g:compe.resolve_timeout = 800
+  let g:compe.incomplete_delay = 400
+  let g:compe.max_abbr_width = 100
+  let g:compe.max_kind_width = 100
+  let g:compe.max_menu_width = 100
+  let g:compe.documentation = v:true
+
+  let g:compe.source = {}
+  let g:compe.source.path = v:true
+  let g:compe.source.buffer = v:true
+  let g:compe.source.calc = v:true
+  let g:compe.source.nvim_lsp = v:true
+  let g:compe.source.nvim_lua = v:true
+  let g:compe.source.vsnip = g:vimrc_vsnip
+  let g:compe.source.ultisnips = v:false
+  let g:compe.source.luasnip = v:false
+  let g:compe.source.emoji = v:false
+endif " g:vimrc_compe
+
+if g:vimrc_compe && g:vimrc_vsnip
+lua << EOF
+  local t = function(str)
+    return vim.api.nvim_replace_termcodes(str, true, true, true)
+  end
+
+  local check_back_space = function()
+      local col = vim.fn.col('.') - 1
+      return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
+  end
+
+  -- Use (s-)tab to:
+  --- move to prev/next item in completion menuone
+  --- jump to prev/next snippet's placeholder
+  _G.tab_complete = function()
+    if vim.fn.pumvisible() == 1 then
+      return t "<C-n>"
+    elseif vim.fn['vsnip#available'](1) == 1 then
+      return t "<Plug>(vsnip-expand-or-jump)"
+    elseif check_back_space() then
+      return t "<Tab>"
+    else
+      return vim.fn['compe#complete']()
+    end
+  end
+  _G.s_tab_complete = function()
+    if vim.fn.pumvisible() == 1 then
+      return t "<C-p>"
+    elseif vim.fn['vsnip#jumpable'](-1) == 1 then
+      return t "<Plug>(vsnip-jump-prev)"
+    else
+      -- If <S-Tab> is not working in your terminal, change it to <C-h>
+      return t "<S-Tab>"
+    end
+  end
+EOF
+endif " g:vimrc_compe && g:vimrc_vsnip
+
+if g:vimrc_which_key
+lua << EOF
+  require("which-key").setup({})
+EOF
+endif " g:vimrc_which_key
+
+if g:vimrc_telescope
+lua << EOF
+  require('telescope').setup({})
+EOF
+endif " g:vimrc_telescope
 
 " *** Keybindings
 
@@ -543,3 +675,35 @@ if g:vimrc_notational_fzf
   "  - <C-y> yank selected filename
   "  - <Enter> open in current buffer
 endif " g:vimrc_notational_fzf
+
+if g:vimrc_compe
+  inoremap <silent><expr> <C-Space> compe#complete()
+  inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+  inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+  inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+  inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+endif " g:vimrc_compe
+
+if g:vimrc_compe && g:vimrc_vsnip
+  imap <expr> <Tab> v:lua.tab_complete()
+  smap <expr> <Tab> v:lua.tab_complete()
+  imap <expr> <S-Tab> v:lua.s_tab_complete()
+  smap <expr> <S-Tab> v:lua.s_tab_complete()
+endif " g:vimrc_compe && g:vimrc_vsnip
+
+if g:vimrc_telescope
+  " Find files using Telescope command-line sugar.
+  nnoremap <silent> <C-p>p <cmd>Telescope find_files<cr>
+  nnoremap <silent> <C-p><C-p> <cmd>Telescope find_files<cr>
+  nnoremap <silent> <C-p>F <cmd>Telescope live_grep<cr>
+  nnoremap <silent> <C-p>b <cmd>Telescope buffers<cr>
+  nnoremap <silent> <C-p>h <cmd>Telescope help_tags<cr>
+  nnoremap <silent> <C-p>t <cmd>Telescope current_bufffer_tags<cr>
+  nnoremap <silent> <C-p>T <cmd>Telescope tags<cr>
+  nnoremap <silent> <C-p>g <cmd>Telescope git_status<cr>
+  nnoremap <silent> <C-p>G <cmd>Telescope git_files<cr>
+endif " g:vimrc_telescope
+
+if g:vimrc_chadtree
+  nnoremap <F9> <cmd>CHADopen<cr>
+endif " g:vimrc_chadtree
