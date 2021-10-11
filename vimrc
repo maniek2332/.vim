@@ -31,7 +31,7 @@ let g:vimrc_fast_fold = g:vimrc_load_plugins && 0
 let g:vimrc_sneak = g:vimrc_load_plugins && 0
 let g:vimrc_surround = g:vimrc_load_plugins && 0
 let g:vimrc_repeat = g:vimrc_load_plugins && 0
-let g:vimrc_notational_fzf = g:vimrc_load_plugins && 0
+let g:vimrc_notational_fzf = g:vimrc_load_plugins && 1
 let g:vimrc_lightline = g:vimrc_load_plugins && 1
 let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
@@ -43,6 +43,7 @@ let g:vimrc_which_key = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_telescope = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_polyglot = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_trouble = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -116,6 +117,7 @@ if g:vimrc_load_plugins
     Plug 'tpope/vim-repeat'
   endif
   if g:vimrc_notational_fzf
+    Plug '~/.fzf'
     Plug 'Alok/notational-fzf-vim'
   endif
   if g:vimrc_lightline
@@ -127,6 +129,7 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_nvim_lspconfig
     Plug 'neovim/nvim-lspconfig'
+    Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim', { 'branch': 'main' }
   endif
   if g:vimrc_compe
     Plug 'hrsh7th/nvim-compe'
@@ -147,6 +150,10 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_chadtree
     Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'}
+  endif
+  if g:vimrc_trouble
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'folke/trouble.nvim', { 'branch': 'main' }
   endif
 
   call plug#end()
@@ -452,6 +459,8 @@ lua << EOF
   -- lspconfig.jedi_language_server.setup({})
   lspconfig.pyright.setup({})
   lspconfig.clangd.setup({cmd = { 'clangd-10', '--background-index' }})
+
+  require('toggle_lsp_diagnostics').init()
 EOF
 endif " g:vimrc_coq_completion
 
@@ -533,7 +542,31 @@ if g:vimrc_telescope
 lua << EOF
   require('telescope').setup({})
 EOF
+
+  if g:vimrc_trouble
+lua << EOF
+    local actions = require("telescope.actions")
+    local trouble = require("trouble.providers.telescope")
+
+    local telescope = require("telescope")
+
+    telescope.setup {
+      defaults = {
+        mappings = {
+          i = { ["<F3>"] = trouble.open_with_trouble },
+          n = { ["<F3>"] = trouble.open_with_trouble },
+        },
+      },
+    }
+EOF
+  endif
 endif " g:vimrc_telescope
+
+if g:vimrc_trouble
+lua << EOF
+  require('trouble').setup({})
+EOF
+endif " g:vimrc_trouble
 
 " *** Keybindings
 
@@ -563,6 +596,18 @@ noremap <F12> :set paste!<CR>:set paste?<CR>
 inoremap <F12> <Esc>:set paste!<CR>:set paste?<CR>a
 vnoremap <F12> :set paste!<CR>:set paste?<CR>
 cnoremap <F12> :set paste!<CR>:set paste?<CR>
+
+nnoremap <silent> ]q <CMD>cnext<CR>
+nnoremap <silent> [q <CMD>cprevious<CR>
+nnoremap <silent> ]Q <CMD>cbelow<CR>
+nnoremap <silent> [Q <CMD>cabove<CR>
+nnoremap <silent> <Leader>q <CMD>copen<CR>
+
+nnoremap <silent> ]w <CMD>lnext<CR>
+nnoremap <silent> [w <CMD>lprevious<CR>
+nnoremap <silent> ]W <CMD>lbelow<CR>
+nnoremap <silent> [W <CMD>labove<CR>
+nnoremap <silent> <Leader>w <CMD>lopen<CR>
 
 if g:vimrc_lsp
     map <Leader>ld <plug>(lsp-definition)
@@ -676,6 +721,18 @@ if g:vimrc_notational_fzf
   "  - <Enter> open in current buffer
 endif " g:vimrc_notational_fzf
 
+if g:vimrc_nvim_lspconfig
+  nnoremap <silent> <Backspace>w <CMD>lua vim.lsp.set_loclist()<CR>
+  nnoremap <silent> <Backspace><Backspace> <CMD>lua vim.lsp.buf.hover()<CR>
+
+  if g:vimrc_telescope
+    nnoremap <silent> <Backspace>r <CMD>Telescope lsp_references<CR>
+    nnoremap <silent> <Backspace>d <CMD>Telescope lsp_definitions<CR>
+    nnoremap <silent> <Backspace>f <CMD>Telescope lsp_document_symbols<CR>
+    nnoremap <silent> <Backspace>F :Telescope lsp_workspace_symbols query=
+  endif " g:vimrc_telescope
+endif " g:vimrc_nvim_lspconfig
+
 if g:vimrc_compe
   inoremap <silent><expr> <C-Space> compe#complete()
   inoremap <silent><expr> <CR>      compe#confirm('<CR>')
@@ -707,3 +764,11 @@ endif " g:vimrc_telescope
 if g:vimrc_chadtree
   nnoremap <F9> <cmd>CHADopen<cr>
 endif " g:vimrc_chadtree
+
+if g:vimrc_trouble
+  nnoremap <F3><F3> <CMD>TroubleToggle<CR>
+  nnorema <F3>f <CMD>TroubleToggle lsp_document_diagnostics<CR>
+  nnoremap <F3>F <CMD>TroubleToggle lsp_workspace_diagnostics<CR>
+  nnoremap <F3>q <CMD>TroubleToggle quickfix<CR>
+  nnoremap <F3>w <CMD>TroubleToggle loclist<CR>
+endif " g:vimrc_trouble
