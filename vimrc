@@ -31,7 +31,7 @@ let g:vimrc_fast_fold = g:vimrc_load_plugins && 0
 let g:vimrc_sneak = g:vimrc_load_plugins && 0
 let g:vimrc_surround = g:vimrc_load_plugins && 0
 let g:vimrc_repeat = g:vimrc_load_plugins && 0
-let g:vimrc_notational_fzf = g:vimrc_load_plugins && 1
+let g:vimrc_notational_fzf = g:vimrc_load_plugins && 0
 let g:vimrc_lightline = g:vimrc_load_plugins && 1
 let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
@@ -39,10 +39,10 @@ let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_compe = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_vsnip = g:vimrc_load_nvim_plugins && 1
-let g:vimrc_which_key = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_which_key = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_telescope = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_polyglot = g:vimrc_load_nvim_plugins && 1
-let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_trouble = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
@@ -457,8 +457,14 @@ lua << EOF
   -- lspconfig.pylsp.setup(coq.lsp_ensure_capabilities({}))
   -- lspconfig.pylsp.setup({})
   -- lspconfig.jedi_language_server.setup({})
+  lspconfig.gopls.setup({})
   lspconfig.pyright.setup({})
-  lspconfig.clangd.setup({cmd = { 'clangd-10', '--background-index' }})
+  for idx, clangd_suffix in pairs({"-14", "-13", "-12", "-11", "-10", "-9", ""}) do
+    if vim.fn.executable("clangd" .. clangd_suffix) == 1 then
+      lspconfig.clangd.setup({cmd = { "clangd" .. clangd_suffix, '--background-index' }})
+      break
+    end
+  end
 
   require('toggle_lsp_diagnostics').init()
 EOF
