@@ -190,6 +190,11 @@ set wildmenu
 set wildmode=full
 set wildoptions=pum,tagfile
 
+set breakindent
+set breakindentopt=min:40
+set linebreak
+set showbreak=\ >>\ 
+
 if g:vimrc_undofile
   set undofile
   if has('nvim')
