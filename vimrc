@@ -145,6 +145,11 @@ if g:vimrc_load_plugins
   if g:vimrc_telescope
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
+    if executable('cmake')
+      Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+    else
+      Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+    endif
   endif
   if g:vimrc_polyglot
     Plug 'sheerun/vim-polyglot'
@@ -556,6 +561,7 @@ endif " g:vimrc_which_key
 if g:vimrc_telescope
 lua << EOF
   require('telescope').setup({})
+  require('telescope').load_extension('fzf')
 EOF
 
   if g:vimrc_trouble
