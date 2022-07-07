@@ -44,6 +44,7 @@ let g:vimrc_telescope = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_polyglot = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_trouble = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_treesitter = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -154,6 +155,9 @@ if g:vimrc_load_plugins
   if g:vimrc_trouble
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'folke/trouble.nvim', { 'branch': 'main' }
+  endif
+  if g:vimrc_treesitter
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   endif
 
   call plug#end()
@@ -578,6 +582,38 @@ lua << EOF
   require('trouble').setup({})
 EOF
 endif " g:vimrc_trouble
+
+if g:vimrc_treesitter
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all"
+  ensure_installed = { "c", "cpp", "python", "lua", "rust" },
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- List of parsers to ignore installing (for "all")
+  -- ignore_install = { "javascript" },
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+    -- disable = { "c", "rust" },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+EOF
+endif
 
 " *** Keybindings
 
