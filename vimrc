@@ -21,7 +21,7 @@ let g:vimrc_cmake_syntax = g:vimrc_load_plugins && 0
 let g:vimrc_rainbow = g:vimrc_load_plugins && 0
 let g:vimrc_alternates = g:vimrc_load_plugins && 0
 let g:vimrc_git_utils = g:vimrc_load_plugins && 1
-let g:vimrc_test_runner = g:vimrc_load_plugins && 0
+let g:vimrc_test_runner = g:vimrc_load_plugins && 1
 let g:vimrc_commenter = g:vimrc_load_plugins && 1
 let g:vimrc_ctrlsf = g:vimrc_load_plugins && 0
 let g:vimrc_vista = g:vimrc_load_plugins && 0
@@ -337,7 +337,7 @@ endif " g:vimrc_git_utils
 
 if g:vimrc_test_runner
   let test#python#runner = "pytest"
-  let test#strategy = "vimterminal"
+  let test#strategy = "neovim"
 endif " g:vimrc_test_runner
 
 if g:vimrc_commenter
@@ -726,10 +726,10 @@ if g:vimrc_git_utils
 endif " g:vimrc_git_utils
 
 if g:vimrc_test_runner
-  nmap <F8>n :TestNearest --reuse-db
-  nmap <F8>f :TestFile --reuse-db
-  nmap <F8>l :TestLast --reuse-db
-  nmap <F8><F8> :TestLast --reuse-db
+  nmap <F8>n :TestNearest
+  nmap <F8>f :TestFile
+  nmap <F8>l :TestLast
+  nmap <F8><F8> :TestLast
 endif " g:vimrc_test_runner
 
 if g:vimrc_commenter
