@@ -45,6 +45,7 @@ let g:vimrc_polyglot = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_trouble = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_treesitter = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_dap = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -163,6 +164,11 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  endif
+  if g:vimrc_dap
+    Plug 'mfussenegger/nvim-dap'
+    Plug 'mfussenegger/nvim-dap-python'
+    Plug 'theHamsta/nvim-dap-virtual-text'
   endif
 
   call plug#end()
@@ -621,6 +627,39 @@ require'nvim-treesitter.configs'.setup {
 EOF
 endif
 
+if g:vimrc_dap
+lua << EOF
+  require('dap-python').setup('/usr/bin/python3')
+  require('dap-python').test_runner = 'pytest'
+  require("nvim-dap-virtual-text").setup({
+    enabled = true,                        -- enable this plugin (the default)
+    enabled_commands = true,               -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
+    highlight_changed_variables = true,    -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
+    highlight_new_as_changed = false,      -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
+    show_stop_reason = true,               -- show stop reason when stopped for exceptions
+    commented = false,                     -- prefix virtual text with comment string
+    only_first_definition = true,          -- only show virtual text at first definition (if there are multiple)
+    all_references = true,                 -- show virtual text on all all references of the variable (not only definitions)
+    filter_references_pattern = '<module', -- filter references (not definitions) pattern when all_references is activated (Lua gmatch pattern, default filters out Python modules)
+    -- experimental features:
+    virt_text_pos = 'eol',                 -- position of virtual text, see `:h nvim_buf_set_extmark()`
+    all_frames = false,                    -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
+    virt_lines = false,                    -- show virtual lines instead of virtual text (will flicker!)
+    virt_text_win_col = nil                -- position the virtual text at a fixed window column (starting from the first text column) ,
+                                           -- e.g. 80 to position at column 80, see `:h nvim_buf_set_extmark()`
+  })
+
+  -- Ensure that DAP terminal is reopened after it gets hidden (e.g. <C-w>q)
+  -- https://github.com/mfussenegger/nvim-dap/issues/603#issuecomment-1184069591
+  vim.api.nvim_create_autocmd('BufHidden',  {
+    pattern  = '[dap-terminal]*',
+    callback = function(arg)
+      vim.schedule(function() vim.api.nvim_buf_delete(arg.buf, { force = true }) end)
+    end
+  })
+EOF
+endif  " g:vimrc_dap
+
 " *** Keybindings
 
 " Use <Space> to input commands
@@ -825,3 +864,21 @@ if g:vimrc_trouble
   nnoremap <F3>q <CMD>TroubleToggle quickfix<CR>
   nnoremap <F3>w <CMD>TroubleToggle loclist<CR>
 endif " g:vimrc_trouble
+
+if g:vimrc_dap
+    nnoremap <silent> <Leader>db <Cmd>lua require('dap').toggle_breakpoint()<CR>
+    nnoremap <silent> <Leader>di <Cmd>lua require('dap').step_into()<CR>
+    nnoremap <silent> <Leader>do <Cmd>lua require('dap').step_out()<CR>
+    nnoremap <silent> <Leader>dd <Cmd>lua require('dap').step_over()<CR>
+    nnoremap <silent> <Leader>dc <Cmd>lua require('dap').continue()<CR>
+    nnoremap <silent> <Leader>dR <Cmd>lua require('dap').repl.open()<CR>
+    nnoremap <silent> <Leader>dT <Cmd>lua require('dap').terminate()<CR>
+    nnoremap <silent> g<F8>l <Cmd>lua require('dap').run_last()<CR>
+    nnoremap <silent> g<F8><F8> <Cmd>lua require('dap').run_last()<CR>
+
+    augroup vimrc_dap_python
+        autocmd!
+        autocmd FileType python nnoremap <buffer><silent> g<F8>n <Cmd>lua require('dap-python').test_method()<CR>
+        autocmd FileType python nnoremap <buffer><silent> g<F8>f <Cmd>lua require('dap-python').test_class()<CR>
+    augroup END
+endif " g:vimrc_dap
