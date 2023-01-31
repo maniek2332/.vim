@@ -46,6 +46,7 @@ let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_trouble = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_treesitter = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_dap = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_diffconflicts = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -169,6 +170,9 @@ if g:vimrc_load_plugins
     Plug 'mfussenegger/nvim-dap'
     Plug 'mfussenegger/nvim-dap-python'
     Plug 'theHamsta/nvim-dap-virtual-text'
+  endif
+  if g:vimrc_diffconflicts
+    Plug 'whiteinge/diffconflicts'
   endif
 
   call plug#end()
@@ -474,11 +478,24 @@ if g:vimrc_nvim_lspconfig
 lua << EOF
   local lspconfig = require('lspconfig')
 
-  -- lspconfig.pylsp.setup(coq.lsp_ensure_capabilities({}))
-  -- lspconfig.pylsp.setup({})
-  -- lspconfig.jedi_language_server.setup({})
   lspconfig.gopls.setup({})
-  lspconfig.pyright.setup({})
+  --
+  lspconfig.pyright.setup({
+    settings = {
+      python = {
+        analysis = {
+          -- defaults from nvim-lspconfig
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = 'workspace',
+          --
+          venvPath = os.getenv("VIRTUAL_ENV") and vim.fs.dirname(os.getenv("VIRTUAL_ENV")),
+          venv = os.getenv("VIRTUAL_ENV") and vim.fs.basename(os.getenv("VIRTUAL_ENV")),
+        }
+      }
+    }
+  })
+  --
   for idx, clangd_suffix in pairs({"-14", "-13", "-12", "-11", "-10", "-9", ""}) do
     if vim.fn.executable("clangd" .. clangd_suffix) == 1 then
       lspconfig.clangd.setup({cmd = { "clangd" .. clangd_suffix, '--background-index' }})
@@ -816,6 +833,7 @@ endif " g:vimrc_notational_fzf
 if g:vimrc_nvim_lspconfig
   nnoremap <silent> <Backspace>w <CMD>lua vim.lsp.set_loclist()<CR>
   nnoremap <silent> <Backspace><Backspace> <CMD>lua vim.lsp.buf.hover()<CR>
+  nnoremap <silent> <Backspace>e <CMD>lua vim.diagnostic.open_float()<CR>
 
   if g:vimrc_telescope
     nnoremap <silent> <Backspace>r <CMD>Telescope lsp_references<CR>
@@ -847,7 +865,7 @@ if g:vimrc_telescope
   nnoremap <silent> <C-p>F <cmd>Telescope live_grep<cr>
   nnoremap <silent> <C-p>b <cmd>Telescope buffers<cr>
   nnoremap <silent> <C-p>h <cmd>Telescope help_tags<cr>
-  nnoremap <silent> <C-p>t <cmd>Telescope current_bufffer_tags<cr>
+  nnoremap <silent> <C-p>t <cmd>Telescope current_buffer_tags<cr>
   nnoremap <silent> <C-p>T <cmd>Telescope tags<cr>
   nnoremap <silent> <C-p>g <cmd>Telescope git_status<cr>
   nnoremap <silent> <C-p>G <cmd>Telescope git_files<cr>
