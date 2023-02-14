@@ -834,10 +834,12 @@ if g:vimrc_nvim_lspconfig
   nnoremap <silent> <Backspace>w <CMD>lua vim.lsp.set_loclist()<CR>
   nnoremap <silent> <Backspace><Backspace> <CMD>lua vim.lsp.buf.hover()<CR>
   nnoremap <silent> <Backspace>e <CMD>lua vim.diagnostic.open_float()<CR>
+  nnoremap <silent> <Backspace>d <CMD>lua vim.lsp.buf.definition()<CR>
+  nnoremap <silent> <Backspace>R <CMD>lua vim.lsp.buf.rename()<CR>
+  nnoremap <silent> <Backspace>= <CMD>lua vim.lsp.buf.format({async = true })<CR>
 
   if g:vimrc_telescope
     nnoremap <silent> <Backspace>r <CMD>Telescope lsp_references<CR>
-    nnoremap <silent> <Backspace>d <CMD>Telescope lsp_definitions<CR>
     nnoremap <silent> <Backspace>f <CMD>Telescope lsp_document_symbols<CR>
     nnoremap <silent> <Backspace>F :Telescope lsp_workspace_symbols query=
   endif " g:vimrc_telescope
