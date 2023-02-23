@@ -47,6 +47,8 @@ let g:vimrc_trouble = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_treesitter = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_dap = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_diffconflicts = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_toggleterm = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_overseer = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -173,6 +175,14 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_diffconflicts
     Plug 'whiteinge/diffconflicts'
+  endif
+  if g:vimrc_toggleterm
+    Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
+  endif
+  if g:vimrc_overseer
+    " TODO Move this to different section
+    Plug 'stevearc/dressing.nvim'
+    Plug 'stevearc/overseer.nvim'
   endif
 
   call plug#end()
@@ -676,6 +686,19 @@ lua << EOF
   })
 EOF
 endif  " g:vimrc_dap
+
+if g:vimrc_toggleterm
+  lua require('toggleterm').setup()
+endif " g:vimrc_toggleterm
+
+if g:vimrc_overseer
+lua << EOF
+  require('dressing').setup()
+  require('overseer').setup({
+    strategy = "toggleterm",
+  })
+EOF
+endif " g:vimrc_overseer
 
 " *** Keybindings
 
