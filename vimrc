@@ -8,7 +8,7 @@ let g:vimrc_mouse = 1
 let g:vimrc_colorscheme_wombat = 0
 let g:vimrc_colorscheme_wombat_mods = 0
 let g:vimrc_console_title = 1
-let g:vimrc_auto_readwrite = 1
+let g:vimrc_auto_readwrite = 0
 let g:vimrc_load_plugins = 1
 let g:vimrc_load_nvim_plugins = g:vimrc_load_plugins && has("nvim") && 1
 
@@ -49,6 +49,7 @@ let g:vimrc_dap = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_diffconflicts = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_toggleterm = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_overseer = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_autosave = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -184,6 +185,9 @@ if g:vimrc_load_plugins
     Plug 'stevearc/dressing.nvim'
     Plug 'stevearc/overseer.nvim'
   endif
+  if g:vimrc_autosave
+    Plug 'Pocco81/auto-save.nvim'
+  endif
 
   call plug#end()
 endif
@@ -259,12 +263,7 @@ endif " g:vimrc_console_title
 
 if g:vimrc_auto_readwrite
     set autoread
-
-    augroup vimrc_auto_readwrite
-        autocmd!
-        autocmd FocusGained,BufEnter * :silent! !
-        autocmd FocusLost,WinLeave * :silent! noautocmd update
-    augroup END
+    set autowrite
 endif " g:vimrc_auto_readwrite
 
 if g:vimrc_colorscheme_wombat_mods
@@ -658,6 +657,7 @@ if g:vimrc_dap
 lua << EOF
   require('dap-python').setup('/usr/bin/python3')
   require('dap-python').test_runner = 'pytest'
+  local dap = require('dap')
   require("nvim-dap-virtual-text").setup({
     enabled = true,                        -- enable this plugin (the default)
     enabled_commands = true,               -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
@@ -676,29 +676,97 @@ lua << EOF
                                            -- e.g. 80 to position at column 80, see `:h nvim_buf_set_extmark()`
   })
 
-  -- Ensure that DAP terminal is reopened after it gets hidden (e.g. <C-w>q)
-  -- https://github.com/mfussenegger/nvim-dap/issues/603#issuecomment-1184069591
-  vim.api.nvim_create_autocmd('BufHidden',  {
-    pattern  = '[dap-terminal]*',
-    callback = function(arg)
-      vim.schedule(function() vim.api.nvim_buf_delete(arg.buf, { force = true }) end)
-    end
-  })
+  dap.configurations.python = {
+    {
+      type = 'python';
+      request = 'attach';
+      name = 'Attach remote (default params)';
+      connect = function()
+        return {host = '127.0.0.1', port = 5534}
+      end;
+    },
+  }
 EOF
 endif  " g:vimrc_dap
 
 if g:vimrc_toggleterm
-  lua require('toggleterm').setup()
+lua << EOF
+  require('toggleterm').setup({
+    open_mapping = [[<C-Enter>]],
+    direction = 'float',
+    float_opts = {
+      border = 'curved',
+    },
+  })
+EOF
 endif " g:vimrc_toggleterm
 
 if g:vimrc_overseer
 lua << EOF
-  require('dressing').setup()
+  require('dressing').setup({
+    input = {
+      win_options = {
+        winblend = 0,
+        wrap = false,
+      },
+    },
+    select = {
+      backend = {'bultin'},
+      builtin = {
+        -- These are passed to nvim_open_win
+        anchor = "NW",
+        border = "rounded",
+        -- 'editor' and 'win' will default to being centered
+        relative = "editor",
+
+        buf_options = {},
+        win_options = {
+          -- Window transparency (0-100)
+          winblend = 0,
+        },
+      },
+    },
+  })
   require('overseer').setup({
     strategy = "toggleterm",
+    form = {
+      win_opts = {
+        winblend = 0,
+      },
+    },
+    confirm = {
+      win_opts = {
+        winblend = 0,
+      },
+    },
+    task_win = {
+      win_opts = {
+        winblend = 0,
+      },
+    },
+    default_template_prompt = "always",
   })
 EOF
 endif " g:vimrc_overseer
+
+if g:vimrc_autosave
+lua <<EOF
+require('auto-save').setup({
+  enabled = true,
+  condition = function(buf)
+    local fn = vim.fn
+    local utils = require("auto-save.utils.data")
+    if
+      fn.getbufvar(buf, "&modifiable") == 1 and
+      utils.not_in(fn.getbufvar(buf, "&filetype"), {"OverseerForm"})
+    then
+      return true -- met condition(s), can save
+    end
+      return false -- can't save
+  end,
+})
+EOF
+endif " g:vimrc_autosave
 
 " *** Keybindings
 
@@ -925,3 +993,8 @@ if g:vimrc_dap
         autocmd FileType python nnoremap <buffer><silent> g<F8>f <Cmd>lua require('dap-python').test_class()<CR>
     augroup END
 endif " g:vimrc_dap
+
+if g:vimrc_overseer
+  nnoremap <silent> <F5> :OverseerRun<CR>
+  nnoremap <silent> <F6> :OverseerToggle<CR>
+endif " g:vimrc_overseer
