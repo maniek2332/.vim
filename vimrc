@@ -50,6 +50,7 @@ let g:vimrc_diffconflicts = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_toggleterm = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_overseer = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_autosave = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_rope = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -187,6 +188,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_autosave
     Plug 'Pocco81/auto-save.nvim'
+  endif
+  if g:vimrc_rope
+    Plug 'python-rope/ropevim'
   endif
 
   call plug#end()
@@ -488,6 +492,19 @@ lua << EOF
   local lspconfig = require('lspconfig')
 
   lspconfig.gopls.setup({})
+  --
+  lspconfig.pylsp.setup({
+    autostart = false,
+    settings = {
+      pylsp = {
+        plugins = {
+          rope_autoimport = {
+            enabled = true,
+          },
+        },
+      },
+    },
+  })
   --
   lspconfig.pyright.setup({
     settings = {
@@ -928,6 +945,8 @@ if g:vimrc_nvim_lspconfig
   nnoremap <silent> <Backspace>d <CMD>lua vim.lsp.buf.definition()<CR>
   nnoremap <silent> <Backspace>R <CMD>lua vim.lsp.buf.rename()<CR>
   nnoremap <silent> <Backspace>= <CMD>lua vim.lsp.buf.format({async = true })<CR>
+  nnoremap <silent> <Backspace>a <CMD>lua vim.lsp.buf.code_action()<CR>
+  nnoremap <silent> <Backspace>K <CMD>lua vim.lsp.buf.signature_help()<CR>
 
   if g:vimrc_telescope
     nnoremap <silent> <Backspace>r <CMD>Telescope lsp_references<CR>
