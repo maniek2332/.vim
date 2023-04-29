@@ -32,7 +32,8 @@ let g:vimrc_sneak = g:vimrc_load_plugins && 0
 let g:vimrc_surround = g:vimrc_load_plugins && 0
 let g:vimrc_repeat = g:vimrc_load_plugins && 0
 let g:vimrc_notational_fzf = g:vimrc_load_plugins && 0
-let g:vimrc_lightline = g:vimrc_load_plugins && 1
+let g:vimrc_lightline = g:vimrc_load_plugins && 0
+let g:vimrc_lualine = g:vimrc_load_plugins && 1
 let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
@@ -130,6 +131,9 @@ if g:vimrc_load_plugins
   if g:vimrc_lightline
     Plug 'itchyny/lightline.vim'
     Plug 'mgedmin/taghelper.vim'
+  endif
+  if g:vimrc_lualine
+    Plug 'nvim-lualine/lualine.nvim'
   endif
   if g:vimrc_gutentags
     Plug 'ludovicchabant/vim-gutentags'
@@ -487,6 +491,20 @@ if g:vimrc_lightline
   endfunction
 endif " g:vimrc_lightline
 
+if g:vimrc_lualine
+  set laststatus=3
+lua << EOF
+local custom_gruvbox = require'lualine.themes.gruvbox'
+custom_gruvbox.terminal = vim.deepcopy(custom_gruvbox.insert)
+custom_gruvbox.terminal.a.bg = '#ff9999'
+require('lualine').setup({
+  options = {
+    theme = custom_gruvbox,
+  },
+})
+EOF
+endif " g:vimrc_lualine
+
 if g:vimrc_nvim_lspconfig
 lua << EOF
   local lspconfig = require('lspconfig')
@@ -825,6 +843,8 @@ nnoremap <silent> [w <CMD>lprevious<CR>
 nnoremap <silent> ]W <CMD>lbelow<CR>
 nnoremap <silent> [W <CMD>labove<CR>
 nnoremap <silent> <Leader>w <CMD>lopen<CR>
+
+tnoremap <silent> <C-Backspace> <C-\><C-n>
 
 if g:vimrc_lsp
     map <Leader>ld <plug>(lsp-definition)
