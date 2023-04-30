@@ -53,6 +53,7 @@ let g:vimrc_toggleterm = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_overseer = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_autosave = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_rope = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_ai = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -206,6 +207,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_rope
     Plug 'python-rope/ropevim'
+  endif
+  if g:vimrc_ai
+    Plug 'madox2/vim-ai'
   endif
 
   call plug#end()
