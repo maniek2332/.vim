@@ -37,6 +37,7 @@ let g:vimrc_lualine = g:vimrc_load_plugins && 1
 let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
 
+let g:vimrc_mason = g:vimrc_load_plugins && 1
 let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_compe = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_cmp = g:vimrc_load_nvim_plugins && 1
@@ -139,6 +140,10 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_gutentags
     Plug 'ludovicchabant/vim-gutentags'
+  endif
+  if g:vimrc_mason
+    Plug 'williamboman/mason.nvim'
+    Plug 'williamboman/mason-lspconfig.nvim'
   endif
   if g:vimrc_nvim_lspconfig
     Plug 'neovim/nvim-lspconfig'
@@ -520,6 +525,13 @@ require('lualine').setup({
 EOF
 endif " g:vimrc_lualine
 
+if g:vimrc_mason
+lua <<EOF
+  require("mason").setup()
+  require("mason-lspconfig").setup()
+EOF
+endif " g:vimrc_mason
+
 if g:vimrc_nvim_lspconfig
 lua << EOF
   local lspconfig = require('lspconfig')
@@ -555,12 +567,9 @@ lua << EOF
     }
   })
   --
-  for idx, clangd_suffix in pairs({"-14", "-13", "-12", "-11", "-10", "-9", ""}) do
-    if vim.fn.executable("clangd" .. clangd_suffix) == 1 then
-      lspconfig.clangd.setup({cmd = { "clangd" .. clangd_suffix, '--background-index' }})
-      break
-    end
-  end
+  lspconfig.clangd.setup({
+    cmd = { "clangd", '--background-index' }
+  })
 
   require('toggle_lsp_diagnostics').init()
 EOF
