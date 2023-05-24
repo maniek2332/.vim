@@ -41,7 +41,7 @@ let g:vimrc_mason = g:vimrc_load_plugins && 1
 let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_compe = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_cmp = g:vimrc_load_nvim_plugins && 1
-let g:vimrc_vsnip = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_vsnip = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_which_key = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_telescope = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_polyglot = g:vimrc_load_nvim_plugins && 1
@@ -662,11 +662,7 @@ lua <<EOF
     completion = {
       autocomplete = false,
     },
-    snippet = {
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      end,
-    },
+    snippet = {},
     window = {
       -- completion = cmp.config.window.bordered(),
       -- documentation = cmp.config.window.bordered(),
@@ -680,8 +676,6 @@ lua <<EOF
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        elseif vim.fn["vsnip#available"](1) == 1 then
-          feedkey("<Plug>(vsnip-expand-or-jump)", "")
         elseif has_words_before() then
           cmp.complete()
         else
@@ -691,15 +685,12 @@ lua <<EOF
       ["<S-Tab>"] = cmp.mapping(function()
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-          feedkey("<Plug>(vsnip-jump-prev)", "")
         end
       end, { "i", "s" }),
       }),
 
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
-      { name = 'vsnip' }, -- For vsnip users.
     }, {
       { name = 'buffer' },
     })
