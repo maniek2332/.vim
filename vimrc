@@ -35,7 +35,8 @@ let g:vimrc_notational_fzf = g:vimrc_load_plugins && 0
 let g:vimrc_lightline = g:vimrc_load_plugins && 0
 let g:vimrc_lualine = g:vimrc_load_plugins && 1
 let g:vimrc_gutentags = g:vimrc_load_plugins && 1
-let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 1
+let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 0
+let g:vimrc_colorscheme_monokai = g:vimrc_load_plugins && 1
 
 let g:vimrc_mason = g:vimrc_load_plugins && 1
 let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
@@ -68,6 +69,9 @@ if g:vimrc_load_plugins
   if g:vimrc_colorscheme_gruvbox
     Plug 'morhetz/gruvbox'
   endif " g:vimrc_colorscheme_gruvbox
+  if g:vimrc_colorscheme_monokai
+    Plug 'loctvl842/monokai-pro.nvim'
+  endif " g:vimrc_colorscheme_monokai
   if g:vimrc_lsp
     Plug 'prabirshrestha/async.vim'
     Plug 'prabirshrestha/vim-lsp'
@@ -311,6 +315,13 @@ if g:vimrc_colorscheme_gruvbox
   colorscheme gruvbox
   set background=dark
 endif " g:vimrc_colorscheme_gruvbox
+
+if g:vimrc_colorscheme_monokai
+lua << EOF
+require("monokai-pro").setup()
+EOF
+colorscheme monokai-pro
+endif " g:vimrc_colorscheme_monokai
 
 augroup BgHighlight
   autocmd!
