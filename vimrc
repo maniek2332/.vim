@@ -199,6 +199,7 @@ if g:vimrc_load_plugins
     Plug 'mfussenegger/nvim-dap'
     Plug 'mfussenegger/nvim-dap-python'
     Plug 'theHamsta/nvim-dap-virtual-text'
+    Plug 'rcarriga/nvim-dap-ui'
   endif
   if g:vimrc_diffconflicts
     Plug 'whiteinge/diffconflicts'
@@ -525,13 +526,19 @@ endif " g:vimrc_lightline
 if g:vimrc_lualine
   set laststatus=3
 lua << EOF
-local custom_gruvbox = require'lualine.themes.gruvbox'
-custom_gruvbox.terminal = vim.deepcopy(custom_gruvbox.insert)
-custom_gruvbox.terminal.a.bg = '#ff9999'
+function dap_status()
+    local dap = require('dap')
+    local status = dap.status()
+
+    if status ~= "" then
+        return "DAP active"
+    end
+    return ""
+end
 require('lualine').setup({
-  options = {
-    theme = custom_gruvbox,
-  },
+    sections = {
+        lualine_a = {'mode', dap_status},
+    },
 })
 EOF
 endif " g:vimrc_lualine
@@ -815,7 +822,7 @@ endif
 
 if g:vimrc_dap
 lua << EOF
-  require('dap-python').setup('/usr/bin/python3')
+  require('dap-python').setup(vim.fn.executable('python') == 1 and 'python' or 'python3')
   require('dap-python').test_runner = 'pytest'
   local dap = require('dap')
   require("nvim-dap-virtual-text").setup({
@@ -842,10 +849,12 @@ lua << EOF
       request = 'attach';
       name = 'Attach remote (default params)';
       connect = function()
-        return {host = '127.0.0.1', port = 5534}
+        return {host = '127.0.0.1', port = 5678}
       end;
     },
   }
+  require("dapui").setup()
+  require("dap.ext.vscode").load_launchjs('./launch.json')
 EOF
 endif  " g:vimrc_dap
 
