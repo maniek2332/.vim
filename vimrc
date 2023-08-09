@@ -39,9 +39,8 @@ let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 0
 let g:vimrc_colorscheme_monokai = g:vimrc_load_plugins && 1
 
 let g:vimrc_mason = g:vimrc_load_plugins && 1
-let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
-let g:vimrc_compe = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_cmp = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_vsnip = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_which_key = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_telescope = g:vimrc_load_nvim_plugins && 1
@@ -52,10 +51,12 @@ let g:vimrc_treesitter = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_dap = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_diffconflicts = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_toggleterm = g:vimrc_load_nvim_plugins && 1
-let g:vimrc_overseer = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_overseer = g:vimrc_load_nvim_plugins && 0
+let g:vimrc_toggletasks = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_autosave = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_rope = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_ai = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_neotest = g:vimrc_load_nvim_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -149,13 +150,6 @@ if g:vimrc_load_plugins
     Plug 'williamboman/mason.nvim'
     Plug 'williamboman/mason-lspconfig.nvim'
   endif
-  if g:vimrc_nvim_lspconfig
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim', { 'branch': 'main' }
-  endif
-  if g:vimrc_compe
-    Plug 'hrsh7th/nvim-compe'
-  endif
   if g:vimrc_cmp
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
@@ -163,12 +157,9 @@ if g:vimrc_load_plugins
     Plug 'hrsh7th/cmp-cmdline'
     Plug 'hrsh7th/nvim-cmp'
   endif
-  if g:vimrc_vsnip && g:vimrc_cmp
-    Plug 'hrsh7th/cmp-vsnip'
-  endif
-  if g:vimrc_vsnip
-    Plug 'hrsh7th/vim-vsnip'
-    Plug 'rafamadriz/friendly-snippets', { 'branch': 'main' }
+  if g:vimrc_nvim_lspconfig
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'WhoIsSethDaniel/toggle-lsp-diagnostics.nvim', { 'branch': 'main' }
   endif
   if g:vimrc_which_key
     Plug 'folke/which-key.nvim', { 'branch': 'main' }
@@ -212,6 +203,9 @@ if g:vimrc_load_plugins
     Plug 'stevearc/dressing.nvim'
     Plug 'stevearc/overseer.nvim'
   endif
+  if g:vimrc_toggletasks
+    Plug 'jedrzejboczar/toggletasks.nvim'
+  endif
   if g:vimrc_autosave
     Plug 'Pocco81/auto-save.nvim'
   endif
@@ -220,6 +214,13 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_ai
     Plug 'madox2/vim-ai'
+  endif
+  if g:vimrc_neotest
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-treesitter/nvim-treesitter'
+    Plug 'antoinemadec/FixCursorHold.nvim'
+    Plug 'nvim-neotest/neotest'
+    Plug 'nvim-neotest/neotest-python'
   endif
 
   call plug#end()
@@ -260,6 +261,8 @@ set breakindent
 set breakindentopt=min:40
 set linebreak
 set showbreak=\ >>\ 
+
+set notagrelative
 
 if g:vimrc_undofile
   set undofile
@@ -535,9 +538,18 @@ function dap_status()
     end
     return ""
 end
+
+local function neotest_status()
+    if vim.g.test and vim.g.test.running then
+        return 'Testing: ' .. vim.g.test.framework() .. ' (' .. vim.g.test.name() .. ')'
+    end
+    return ''
+end
+
 require('lualine').setup({
     sections = {
         lualine_a = {'mode', dap_status},
+        lualine_b = {'branch', 'diff', 'diagnostics', neotest_status},
     },
 })
 EOF
@@ -549,117 +561,6 @@ lua <<EOF
   require("mason-lspconfig").setup()
 EOF
 endif " g:vimrc_mason
-
-if g:vimrc_nvim_lspconfig
-lua << EOF
-  local lspconfig = require('lspconfig')
-
-  lspconfig.gopls.setup({})
-  --
-  lspconfig.pylsp.setup({
-    autostart = false,
-    settings = {
-      pylsp = {
-        plugins = {
-          rope_autoimport = {
-            enabled = true,
-          },
-        },
-      },
-    },
-  })
-  --
-  lspconfig.pyright.setup({
-    settings = {
-      python = {
-        analysis = {
-          -- defaults from nvim-lspconfig
-          autoSearchPaths = true,
-          useLibraryCodeForTypes = true,
-          diagnosticMode = 'workspace',
-          --
-          venvPath = os.getenv("VIRTUAL_ENV") and vim.fs.dirname(os.getenv("VIRTUAL_ENV")),
-          venv = os.getenv("VIRTUAL_ENV") and vim.fs.basename(os.getenv("VIRTUAL_ENV")),
-        }
-      }
-    }
-  })
-  --
-  lspconfig.clangd.setup({
-    cmd = { "clangd", '--background-index' }
-  })
-
-  require('toggle_lsp_diagnostics').init()
-EOF
-endif " g:vimrc_coq_completion
-
-if g:vimrc_compe
-  set completeopt=menuone,noselect
-
-  let g:compe = {}
-  let g:compe.enabled = v:true
-  let g:compe.autocomplete = v:true
-  let g:compe.debug = v:false
-  let g:compe.min_length = 1
-  let g:compe.preselect = 'enable'
-  let g:compe.throttle_time = 80
-  let g:compe.source_timeout = 200
-  let g:compe.resolve_timeout = 800
-  let g:compe.incomplete_delay = 400
-  let g:compe.max_abbr_width = 100
-  let g:compe.max_kind_width = 100
-  let g:compe.max_menu_width = 100
-  let g:compe.documentation = v:true
-
-  let g:compe.source = {}
-  let g:compe.source.path = v:true
-  let g:compe.source.buffer = v:true
-  let g:compe.source.calc = v:true
-  let g:compe.source.nvim_lsp = v:true
-  let g:compe.source.nvim_lua = v:true
-  let g:compe.source.vsnip = g:vimrc_vsnip
-  let g:compe.source.ultisnips = v:false
-  let g:compe.source.luasnip = v:false
-  let g:compe.source.emoji = v:false
-endif " g:vimrc_compe
-
-if g:vimrc_compe && g:vimrc_vsnip
-lua << EOF
-  local t = function(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
-  end
-
-  local check_back_space = function()
-      local col = vim.fn.col('.') - 1
-      return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') ~= nil
-  end
-
-  -- Use (s-)tab to:
-  --- move to prev/next item in completion menuone
-  --- jump to prev/next snippet's placeholder
-  _G.tab_complete = function()
-    if vim.fn.pumvisible() == 1 then
-      return t "<C-n>"
-    elseif vim.fn['vsnip#available'](1) == 1 then
-      return t "<Plug>(vsnip-expand-or-jump)"
-    elseif check_back_space() then
-      return t "<Tab>"
-    else
-      return vim.fn['compe#complete']()
-    end
-  end
-  _G.s_tab_complete = function()
-    if vim.fn.pumvisible() == 1 then
-      return t "<C-p>"
-    elseif vim.fn['vsnip#jumpable'](-1) == 1 then
-      return t "<Plug>(vsnip-jump-prev)"
-    else
-      -- If <S-Tab> is not working in your terminal, change it to <C-h>
-      return t "<S-Tab>"
-    end
-  end
-EOF
-endif " g:vimrc_compe && g:vimrc_vsnip
 
 if g:vimrc_cmp
 lua <<EOF
@@ -742,14 +643,71 @@ lua <<EOF
   })
 
   -- Set up lspconfig.
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  cmp_capabilities = require('cmp_nvim_lsp').default_capabilities()
   -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-  
-  require('lspconfig')['pyright'].setup {
-    capabilities = capabilities
-  }
+EOF
+else
+lua <<EOF
+  cmp_capabilities = {}
 EOF
 endif " g:vimrc_cmp
+
+if g:vimrc_nvim_lspconfig
+lua << EOF
+  local lspconfig = require('lspconfig')
+
+  lspconfig.gopls.setup({})
+  --
+  lspconfig.pylsp.setup({
+    capabilities = cmp_capabilities,
+    autostart = true,
+    cmd = {'pylsp', '-v'},
+    settings = {
+      pylsp = {
+        plugins = {
+          rope_autoimport = {
+            enabled = true,
+          },
+          ruff = {
+            enabled = true,
+            lineLength = 120,
+          },
+          black = {
+            enabled = true,
+          },
+        },
+      },
+    },
+  })
+  --
+  lspconfig.pyright.setup({
+    capabilities = cmp_capabilities,
+    autostart = false,
+    settings = {
+      python = {
+        analysis = {
+          -- defaults from nvim-lspconfig
+          autoSearchPaths = true,
+          useLibraryCodeForTypes = true,
+          diagnosticMode = 'workspace',
+          --
+          venvPath = os.getenv("VIRTUAL_ENV") and vim.fs.dirname(os.getenv("VIRTUAL_ENV")),
+          venv = os.getenv("VIRTUAL_ENV") and vim.fs.basename(os.getenv("VIRTUAL_ENV")),
+        }
+      }
+    }
+  })
+  --
+  lspconfig.clangd.setup({
+    capabilities = cmp_capabilities,
+    cmd = { "clangd", '--background-index' }
+  })
+
+  require('toggle_lsp_diagnostics').init()
+
+  lspconfig.pyright.setup({autostart=false})
+EOF
+endif " g:vimrc_nvim_lspconfig
 
 if g:vimrc_which_key
 lua << EOF
@@ -918,6 +876,17 @@ lua << EOF
 EOF
 endif " g:vimrc_overseer
 
+if g:vimrc_toggletasks
+lua <<EOF
+  require('toggletasks').setup{
+    toggleterm = {
+      hidden = false,
+    },
+  }
+  require('telescope').load_extension('toggletasks')
+EOF
+endif " g:vimrc_toggletasks
+
 if g:vimrc_autosave
 lua <<EOF
 require('auto-save').setup({
@@ -937,6 +906,16 @@ require('auto-save').setup({
 EOF
 endif " g:vimrc_autosave
 
+if g:vimrc_neotest
+lua <<EOF
+require("neotest").setup({
+  adapters = {
+    require("neotest-python")
+  },
+})
+EOF
+endif " g:vimrc_neotest
+
 " *** Keybindings
 
 " Use <Space> to input commands
@@ -952,7 +931,7 @@ map , <Leader>
 
 noremap gr gT
 
-map <Leader>t :tabnew<CR>
+map <Leader>gT :tabnew<CR>
 map <Leader>T :tab split<CR>
 
 noremap go o<Esc>
@@ -978,7 +957,8 @@ nnoremap <silent> ]W <CMD>lbelow<CR>
 nnoremap <silent> [W <CMD>labove<CR>
 nnoremap <silent> <Leader>w <CMD>lopen<CR>
 
-tnoremap <silent> <C-Backspace> <C-\><C-n>
+tnoremap <silent> <C-\><BS> <C-\><C-n>
+tnoremap <expr> <C-\><C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
 
 if g:vimrc_lsp
     map <Leader>ld <plug>(lsp-definition)
@@ -1041,6 +1021,7 @@ if g:vimrc_git_utils
   vmap <Leader>hc :GV!<CR>
   nmap <Leader>hr :GV?<CR>
   vmap <Leader>hr :GV?<CR>
+  nmap <Leader>GG <Cmd>vertical topleft Git<CR>
 endif " g:vimrc_git_utils
 
 if g:vimrc_test_runner
@@ -1104,25 +1085,10 @@ if g:vimrc_nvim_lspconfig
 
   if g:vimrc_telescope
     nnoremap <silent> <Backspace>r <CMD>Telescope lsp_references<CR>
-    nnoremap <silent> <Backspace>f <CMD>Telescope lsp_document_symbols<CR>
-    nnoremap <silent> <Backspace>F :Telescope lsp_workspace_symbols query=
+    nnoremap <silent> <C-p>s <CMD>Telescope lsp_document_symbols<CR>
+    nnoremap <silent> <C-p>S <CMD>Telescope lsp_dynamic_workspace_symbols<CR>
   endif " g:vimrc_telescope
 endif " g:vimrc_nvim_lspconfig
-
-if g:vimrc_compe
-  inoremap <silent><expr> <C-Space> compe#complete()
-  inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-  inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-  inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-  inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-endif " g:vimrc_compe
-
-if g:vimrc_compe && g:vimrc_vsnip
-  imap <expr> <Tab> v:lua.tab_complete()
-  smap <expr> <Tab> v:lua.tab_complete()
-  imap <expr> <S-Tab> v:lua.s_tab_complete()
-  smap <expr> <S-Tab> v:lua.s_tab_complete()
-endif " g:vimrc_compe && g:vimrc_vsnip
 
 if g:vimrc_telescope
   " Find files using Telescope command-line sugar.
@@ -1143,8 +1109,8 @@ endif " g:vimrc_chadtree
 
 if g:vimrc_trouble
   nnoremap <F3><F3> <CMD>TroubleToggle<CR>
-  nnorema <F3>f <CMD>TroubleToggle lsp_document_diagnostics<CR>
-  nnoremap <F3>F <CMD>TroubleToggle lsp_workspace_diagnostics<CR>
+  nnorema <F3>f <CMD>TroubleToggle document_diagnostics<CR>
+  nnoremap <F3>F <CMD>TroubleToggle workspace_diagnostics<CR>
   nnoremap <F3>q <CMD>TroubleToggle quickfix<CR>
   nnoremap <F3>w <CMD>TroubleToggle loclist<CR>
 endif " g:vimrc_trouble
@@ -1157,6 +1123,9 @@ if g:vimrc_dap
     nnoremap <silent> <Leader>dc <Cmd>lua require('dap').continue()<CR>
     nnoremap <silent> <Leader>dR <Cmd>lua require('dap').repl.open()<CR>
     nnoremap <silent> <Leader>dT <Cmd>lua require('dap').terminate()<CR>
+    nnoremap <silent> <Leader>dU <Cmd>lua require('dapui').toggle()<CR>
+    nnoremap <silent> <Leader>de <Cmd>lua require('dapui').eval()<CR>
+
     nnoremap <silent> g<F8>l <Cmd>lua require('dap').run_last()<CR>
     nnoremap <silent> g<F8><F8> <Cmd>lua require('dap').run_last()<CR>
 
@@ -1171,3 +1140,21 @@ if g:vimrc_overseer
   nnoremap <silent> <F5> :OverseerRun<CR>
   nnoremap <silent> <F6> :OverseerToggle<CR>
 endif " g:vimrc_overseer
+
+if g:vimrc_toggletasks
+  nnoremap <silent> <F6> :Telescope toggletasks spawn<CR>
+  nnoremap <silent> g<F6> :Telescope toggletasks select<CR>
+  nnoremap <silent> <Leader><F6>e :Telescope toggletasks edit<CR>
+endif " g:vimrc_toggletasks
+
+if g:vimrc_neotest
+  nnoremap <Leader>tt <Cmd>lua require('neotest').run.run()<CR>
+  nnoremap <Leader>tT <Cmd>lua require('neotest').run.run({strategy = "dap"})<CR>
+  nnoremap <Leader>tf <Cmd>lua require("neotest").run.run(vim.fn.expand("%"))<CR>
+  nnoremap <Leader>tF <Cmd>lua require("neotest").run.run({vim.fn.expand("%"), strategy = "dap"})<CR>
+  nnoremap <Leader>tr <Cmd>lua require("neotest").run.run_last()<CR>
+  nnoremap <Leader>tR <Cmd>lua require("neotest").run.run_last({strategy = "dap"})<CR>
+  nnoremap <Leader>to <Cmd>lua require("neotest").output.open()<CR>
+  nnoremap <Leader>tO <Cmd>lua require("neotest").output_panel.toggle()<CR>
+  nnoremap <Leader>tS <Cmd>lua require("neotest").summary.toggle()<CR>
+endif " g:vimrc_neotest
