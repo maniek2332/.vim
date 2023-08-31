@@ -57,6 +57,8 @@ let g:vimrc_autosave = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_rope = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_ai = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_neotest = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_copilot_lua = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_copilot_vanilla = g:vimrc_load_nvim_plugins && 0
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -221,6 +223,13 @@ if g:vimrc_load_plugins
     Plug 'antoinemadec/FixCursorHold.nvim'
     Plug 'nvim-neotest/neotest'
     Plug 'nvim-neotest/neotest-python'
+  endif
+  if g:vimrc_copilot_lua
+    Plug 'zbirenbaum/copilot.lua'
+    " Plug 'zbirenbaum/copilot-cmp'
+  endif
+  if g:vimrc_copilot_vanilla
+    Plug 'github/copilot.vim'
   endif
 
   call plug#end()
@@ -915,6 +924,22 @@ require("neotest").setup({
 })
 EOF
 endif " g:vimrc_neotest
+
+if g:vimrc_copilot_lua
+lua <<EOF
+require("copilot").setup({
+  suggestion = {
+    enabled = true,
+    auto_trigger = true,
+  }
+})
+-- require("copilot_cmp").setup()
+EOF
+endif " g:vimrc_copilot_lua
+
+if g:vimrc_copilot_vanilla
+  let g:copilot_no_tab_map = v:true
+endif " g:vimrc_copilot_vanilla
 
 " *** Keybindings
 
