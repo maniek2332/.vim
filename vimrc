@@ -712,6 +712,13 @@ lua << EOF
     cmd = { "clangd", '--background-index' }
   })
 
+  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics,
+    {
+        underline = false
+    }
+  )
+
   require('toggle_lsp_diagnostics').init()
 
   lspconfig.pyright.setup({autostart=false})
@@ -920,6 +927,9 @@ lua <<EOF
 require("neotest").setup({
   adapters = {
     require("neotest-python")
+  },
+  quickfix = {
+    open = false,
   },
 })
 EOF
