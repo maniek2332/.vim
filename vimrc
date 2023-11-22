@@ -9,7 +9,7 @@ let g:vimrc_colorscheme_wombat = 0
 let g:vimrc_colorscheme_wombat_mods = 0
 let g:vimrc_console_title = 1
 let g:vimrc_auto_readwrite = 0
-let g:vimrc_load_plugins = 1
+let g:vimrc_load_plugins = $VIMRC_LOAD_PLUGINS != "0" && tolower($VIMRC_LOAD_PLUGINS) != "false" && tolower($VIMRC_LOAD_PLUGINS) != "no"
 let g:vimrc_load_nvim_plugins = g:vimrc_load_plugins && has("nvim") && 1
 
 let g:vimrc_lsp = g:vimrc_load_plugins && 0
@@ -52,7 +52,8 @@ let g:vimrc_dap = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_diffconflicts = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_toggleterm = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_overseer = g:vimrc_load_nvim_plugins && 0
-let g:vimrc_toggletasks = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_toggletasks = g:vimrc_load_nvim_plugins && 0
+let g:vimrc_asynctasks = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_autosave = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_rope = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_ai = g:vimrc_load_nvim_plugins && 1
@@ -207,6 +208,13 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_toggletasks
     Plug 'jedrzejboczar/toggletasks.nvim'
+  endif
+  if g:vimrc_asynctasks
+    Plug 'skywind3000/asyncrun.vim'
+    Plug 'skywind3000/asynctasks.vim'
+    if g:vimrc_telescope
+      Plug 'GustavoKatel/telescope-asynctasks.nvim'
+    endif
   endif
   if g:vimrc_autosave
     Plug 'Pocco81/auto-save.nvim'
@@ -564,6 +572,10 @@ require('lualine').setup({
 EOF
 endif " g:vimrc_lualine
 
+if g:vimrc_gutentags
+  let g:gutentags_ctags_exclude = ['.mypy_cache/*']
+endif " g:vimrc_gutentags
+
 if g:vimrc_mason
 lua <<EOF
   require("mason").setup()
@@ -600,7 +612,17 @@ lua <<EOF
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ["<CR>"] = cmp.mapping({
+        i = function(fallback)
+          if cmp.visible() and cmp.get_active_entry() then
+            cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+          else
+            fallback()
+          end
+        end,
+        s = cmp.mapping.confirm({ select = true }),
+        c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+      }),
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
@@ -733,7 +755,13 @@ endif " g:vimrc_which_key
 
 if g:vimrc_telescope
 lua << EOF
-  require('telescope').setup({})
+  require('telescope').setup({
+    pickers = {
+      find_files = {
+        hidden = true,
+      },
+    },
+  })
   require('telescope').load_extension('fzf')
 EOF
 
@@ -903,6 +931,22 @@ lua <<EOF
 EOF
 endif " g:vimrc_toggletasks
 
+if g:vimrc_asynctasks
+lua <<EOF
+  function wezterm_run(opts)
+    print("Running " .. opts.cmd)
+    local cmd = "wezterm cli spawn --cwd " .. vim.fn.getcwd() .. " -- term-runner -- " .. opts.cmd
+    print("Full command: " .. cmd)
+    vim.fn.system(cmd)
+  end
+EOF
+
+let g:asyncrun_runner = get(g:, 'asyncrun_runner', {})
+let g:asyncrun_runner.wezterm = {opts -> luaeval('wezterm_run(_A)', opts)}
+let g:asynctasks_term_pos = 'wezterm'
+
+endif " g:vimrc_asynctasks
+
 if g:vimrc_autosave
 lua <<EOF
 require('auto-save').setup({
@@ -994,6 +1038,12 @@ nnoremap <silent> <Leader>w <CMD>lopen<CR>
 
 tnoremap <silent> <C-\><BS> <C-\><C-n>
 tnoremap <expr> <C-\><C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
+
+nnoremap <silent> H gT
+nnoremap <silent> L gt
+
+nnoremap <silent> gh H
+nnoremap <silent> gl L
 
 if g:vimrc_lsp
     map <Leader>ld <plug>(lsp-definition)
@@ -1136,6 +1186,7 @@ if g:vimrc_telescope
   nnoremap <silent> <C-p>T <cmd>Telescope tags<cr>
   nnoremap <silent> <C-p>g <cmd>Telescope git_status<cr>
   nnoremap <silent> <C-p>G <cmd>Telescope git_files<cr>
+  nnoremap <silent> <C-p><Enter> <cmd>Telescope resume<cr>
 endif " g:vimrc_telescope
 
 if g:vimrc_chadtree
@@ -1181,6 +1232,14 @@ if g:vimrc_toggletasks
   nnoremap <silent> g<F6> :Telescope toggletasks select<CR>
   nnoremap <silent> <Leader><F6>e :Telescope toggletasks edit<CR>
 endif " g:vimrc_toggletasks
+
+if g:vimrc_asynctasks
+  nnoremap <silent> <F5> :AsyncTaskLast<CR>
+  nnoremap <silent> g<F6> :AsyncTaskList<CR>
+  if g:vimrc_telescope
+    nnoremap <silent> <F6> :Telescope asynctasks all<CR>
+  endif " g:vimrc_telescope
+endif " g:vimrc_asynctasks
 
 if g:vimrc_neotest
   nnoremap <Leader>tt <Cmd>lua require('neotest').run.run()<CR>
