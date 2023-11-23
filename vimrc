@@ -217,7 +217,7 @@ if g:vimrc_load_plugins
     endif
   endif
   if g:vimrc_autosave
-    Plug 'Pocco81/auto-save.nvim'
+    Plug 'https://git.sr.ht/~nedia/auto-save.nvim'
   endif
   if g:vimrc_rope
     Plug 'python-rope/ropevim'
@@ -342,6 +342,8 @@ lua << EOF
 require("monokai-pro").setup()
 EOF
 colorscheme monokai-pro
+highlight NormalNC guibg=#222222
+highlight LineNr guibg=NONE
 endif " g:vimrc_colorscheme_monokai
 
 augroup BgHighlight
@@ -949,19 +951,9 @@ endif " g:vimrc_asynctasks
 
 if g:vimrc_autosave
 lua <<EOF
-require('auto-save').setup({
-  enabled = true,
-  condition = function(buf)
-    local fn = vim.fn
-    local utils = require("auto-save.utils.data")
-    if
-      fn.getbufvar(buf, "&modifiable") == 1 and
-      utils.not_in(fn.getbufvar(buf, "&filetype"), {"OverseerForm"})
-    then
-      return true -- met condition(s), can save
-    end
-      return false -- can't save
-  end,
+require("auto-save").setup({
+  events = { "InsertLeave", "BufLeave", "WinLeave", "TabLeave", "FocusLost" },
+  exclude_ft = { "neo-tree", "OverseerForm" },
 })
 EOF
 endif " g:vimrc_autosave
