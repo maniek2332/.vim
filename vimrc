@@ -60,6 +60,7 @@ let g:vimrc_ai = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_neotest = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_copilot_lua = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_copilot_vanilla = g:vimrc_load_nvim_plugins && 0
+let g:vimrc_surround = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -238,6 +239,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_copilot_vanilla
     Plug 'github/copilot.vim'
+  endif
+  if g:vimrc_surround
+    Plug 'tpope/vim-surround'
   endif
 
   call plug#end()
