@@ -348,6 +348,12 @@ EOF
 colorscheme monokai-pro
 highlight NormalNC guibg=#222222
 highlight LineNr guibg=NONE
+
+augroup colorscheme_handle_focus
+    autocmd!
+    autocmd FocusLost * highlight Normal guibg=#222222
+    autocmd FocusGained * highlight Normal guibg=#2d2a2e
+augroup END
 endif " g:vimrc_colorscheme_monokai
 
 augroup BgHighlight
