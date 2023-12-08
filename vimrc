@@ -178,6 +178,7 @@ if g:vimrc_load_plugins
     endif
   endif
   if g:vimrc_polyglot
+    let g:polyglot_disabled = ['python', 'autoindent', 'sensible']
     Plug 'sheerun/vim-polyglot'
   endif
   if g:vimrc_chadtree
@@ -830,8 +831,16 @@ require'nvim-treesitter.configs'.setup {
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
+
+  indent = {
+    enable = true,
+  },
 }
 EOF
+
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set nofoldenable
 endif
 
 if g:vimrc_dap
