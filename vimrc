@@ -38,7 +38,7 @@ let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 0
 let g:vimrc_colorscheme_monokai = g:vimrc_load_plugins && 1
 
-let g:vimrc_mason = g:vimrc_load_plugins && 1
+let g:vimrc_mason = g:vimrc_load_plugins && 0
 let g:vimrc_cmp = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_vsnip = g:vimrc_load_nvim_plugins && 0
@@ -697,6 +697,7 @@ EOF
 endif " g:vimrc_cmp
 
 if g:vimrc_nvim_lspconfig
+" pip install python-lsp-server rope ropevim pylsp-mypy pyls-isort python-lsp-black pylsp-rope python-lsp-ruff
 lua << EOF
   local lspconfig = require('lspconfig')
 
@@ -704,8 +705,12 @@ lua << EOF
   --
   lspconfig.pylsp.setup({
     capabilities = cmp_capabilities,
+    flags = {
+      allow_incremental_sync = false,
+      debounce_text_changes = 500,
+    },
     autostart = true,
-    cmd = {'pylsp', '-v'},
+    cmd = {'pylsp', '-v', '--log-file', '/tmp/pylsp.log'},
     settings = {
       pylsp = {
         plugins = {
@@ -718,6 +723,20 @@ lua << EOF
           },
           black = {
             enabled = true,
+          },
+          jedi_completion = {
+            fuzzy = true,
+          },
+          pyls_isort = {
+            enabled = true,
+          },
+          pylsp_mypy = {
+            enabled = true,
+            strict = false,
+            report_progress = true,
+            live_mode = false,
+            -- `true` will be replace by filename
+            overrides = {'--no-warn-no-return', true},
           },
         },
       },
