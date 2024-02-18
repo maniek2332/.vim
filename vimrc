@@ -48,6 +48,7 @@ let g:vimrc_polyglot = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_chadtree = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_trouble = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_treesitter = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_treesitter_context = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_dap = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_diffconflicts = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_toggleterm = g:vimrc_load_nvim_plugins && 1
@@ -190,6 +191,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  endif
+  if g:vimrc_treesitter && g:vimrc_treesitter_context
+    Plug 'nvim-treesitter/nvim-treesitter-context'
   endif
   if g:vimrc_dap
     Plug 'mfussenegger/nvim-dap'
@@ -868,6 +872,12 @@ set foldexpr=nvim_treesitter#foldexpr()
 set nofoldenable
 endif
 
+if g:vimrc_treesitter && g:vimrc_treesitter_context
+lua << EOF
+-- empty
+EOF
+endif " g:vimrc_treesitter && g:vimrc_treesitter_context
+
 if g:vimrc_dap
 lua << EOF
   require('dap-python').setup(vim.fn.executable('python') == 1 and 'python' or 'python3')
@@ -1010,6 +1020,9 @@ require("neotest").setup({
   },
   quickfix = {
     open = false,
+  },
+  output = {
+    open_on_run = false,
   },
 })
 EOF
@@ -1288,3 +1301,11 @@ if g:vimrc_neotest
   nnoremap <Leader>tO <Cmd>lua require("neotest").output_panel.toggle()<CR>
   nnoremap <Leader>tS <Cmd>lua require("neotest").summary.toggle()<CR>
 endif " g:vimrc_neotest
+
+if g:vimrc_treesitter && g:vimrc_treesitter_context
+lua << EOF
+  vim.keymap.set("n", "[C", function()
+    require("treesitter-context").go_to_context(vim.v.count1)
+  end, { silent = true })
+EOF
+endif " g:vimrc_treesitter && g:vimrc_treesitter_context
