@@ -41,6 +41,7 @@ let g:vimrc_colorscheme_monokai = g:vimrc_load_plugins && 1
 let g:vimrc_nio = g:vimrc_load_plugins && 1
 let g:vimrc_mason = g:vimrc_load_plugins && 0
 let g:vimrc_cmp = g:vimrc_load_nvim_plugins && 1
+let g:vimrc_luasnip = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_vsnip = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_which_key = g:vimrc_load_nvim_plugins && 0
@@ -167,6 +168,13 @@ if g:vimrc_load_plugins
     Plug 'hrsh7th/cmp-path'
     Plug 'hrsh7th/cmp-cmdline'
     Plug 'hrsh7th/nvim-cmp'
+    Plug 'quangnguyen30192/cmp-nvim-tags'
+  endif
+  if g:vimrc_luasnip
+    Plug 'L3MON4D3/LuaSnip'
+  endif
+  if g:vimrc_cmp && g:vimrc_luasnip
+    Plug 'saadparwaiz1/cmp_luasnip'
   endif
   if g:vimrc_nvim_lspconfig
     Plug 'neovim/nvim-lspconfig'
@@ -627,16 +635,21 @@ lua <<EOF
   end
 
   -- Set up nvim-cmp.
-  local cmp = require'cmp'
+  local cmp = require 'cmp'
+  local luasnip = require 'luasnip'
 
   cmp.setup({
     completion = {
       autocomplete = false,
     },
-    snippet = {},
+    snippet = {
+      expand = function(args)
+        luasnip.lsp_expand(args.body)
+      end,
+    },
     window = {
-      -- completion = cmp.config.window.bordered(),
-      -- documentation = cmp.config.window.bordered(),
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
     },
     mapping = cmp.mapping.preset.insert({
       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
@@ -657,6 +670,8 @@ lua <<EOF
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
+        elseif luasnip.expandable() then
+          luasnip.expand()
         elseif has_words_before() then
           cmp.complete()
         else
@@ -666,11 +681,28 @@ lua <<EOF
       ["<S-Tab>"] = cmp.mapping(function()
         if cmp.visible() then
           cmp.select_prev_item()
+        else
+          fallback()
         end
       end, { "i", "s" }),
       }),
 
+    formatting = {
+      format = function(entry, vim_item)
+        vim_item.menu = ({
+          nvim_lsp = "*LSP",
+          luasnip = "*Snip",
+          buffer = "*Buf",
+          path = "*Path",
+          cmp_git = "*Git",
+          tags = "*Tag",
+        })[entry.source.name]
+        return vim_item
+      end,
+    },
+
     sources = cmp.config.sources({
+      { name = 'luasnip' },
       { name = 'nvim_lsp' },
       {
         name = 'buffer',
@@ -680,6 +712,7 @@ lua <<EOF
           end
         }
       },
+      { name = 'tags' },
     })
   })
 
@@ -1208,6 +1241,26 @@ if g:vimrc_notational_fzf
   "  - <C-y> yank selected filename
   "  - <Enter> open in current buffer
 endif " g:vimrc_notational_fzf
+
+if g:vimrc_luasnip
+lua << EOF
+  local luasnip = require('luasnip')
+  vim.keymap.set(
+    {"i", "s"}, "<A-`>", function()
+      if luasnip.jumpable(1) then
+        luasnip.jump(1)
+      end
+    end
+  )
+  vim.keymap.set(
+    {"i", "s"}, "<A-~>", function()
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      end
+    end
+  )
+EOF
+endif " g:vimrc_luasnip
 
 if g:vimrc_nvim_lspconfig
   nnoremap <silent> <Backspace>w <CMD>lua vim.lsp.set_loclist()<CR>
