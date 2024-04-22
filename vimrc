@@ -38,6 +38,7 @@ let g:vimrc_gutentags = g:vimrc_load_plugins && 1
 let g:vimrc_colorscheme_gruvbox = g:vimrc_load_plugins && 0
 let g:vimrc_colorscheme_monokai = g:vimrc_load_plugins && 1
 
+let g:vimrc_nio = g:vimrc_load_plugins && 1
 let g:vimrc_mason = g:vimrc_load_plugins && 0
 let g:vimrc_cmp = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_nvim_lspconfig = g:vimrc_load_nvim_plugins && 1
@@ -62,6 +63,7 @@ let g:vimrc_neotest = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_copilot_lua = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_copilot_vanilla = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_surround = g:vimrc_load_plugins && 1
+let g:vimrc_lint = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -150,6 +152,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_gutentags
     Plug 'ludovicchabant/vim-gutentags'
+  endif
+  if g:vimrc_nio
+    Plug 'nvim-neotest/nvim-nio'
   endif
   if g:vimrc_mason
     Plug 'williamboman/mason.nvim'
@@ -247,6 +252,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_surround
     Plug 'tpope/vim-surround'
+  endif
+  if g:vimrc_lint
+    Plug 'mfussenegger/nvim-lint'
   endif
 
   call plug#end()
@@ -713,44 +721,15 @@ lua << EOF
 
   lspconfig.gopls.setup({})
   --
-  lspconfig.pylsp.setup({
+  lspconfig.ruff_lsp.setup({
     capabilities = cmp_capabilities,
-    flags = {
-      allow_incremental_sync = false,
-      debounce_text_changes = 500,
-    },
     autostart = true,
-    cmd = {'pylsp', '-v', '--log-file', '/tmp/pylsp.log'},
-    settings = {
-      pylsp = {
-        plugins = {
-          rope_autoimport = {
-            enabled = true,
-          },
-          ruff = {
-            enabled = true,
-            lineLength = 120,
-          },
-          black = {
-            enabled = true,
-          },
-          jedi_completion = {
-            fuzzy = true,
-          },
-          pyls_isort = {
-            enabled = true,
-          },
-          pylsp_mypy = {
-            enabled = true,
-            strict = false,
-            report_progress = true,
-            live_mode = false,
-            -- `true` will be replace by filename
-            overrides = {'--no-warn-no-return', true},
-          },
-        },
-      },
-    },
+  })
+  --
+  lspconfig.jedi_language_server.setup({
+    capabilities = cmp_capabilities,
+    autostart = true,
+    cmd = { "jedi-language-server", "-v", "--log-file", "/tmp/jedi-language-server.log" },
   })
   --
   lspconfig.pyright.setup({
@@ -1043,6 +1022,17 @@ endif " g:vimrc_copilot_lua
 if g:vimrc_copilot_vanilla
   let g:copilot_no_tab_map = v:true
 endif " g:vimrc_copilot_vanilla
+
+if g:vimrc_lint
+lua <<EOF
+require('lint').linters_by_ft = {
+  python = {'mypy',}
+}
+local mypy_ns = require("lint").get_namespace("mypy")
+vim.diagnostic.config({underline = false}, mypy_ns)
+EOF
+autocmd BufWritePost *.py lua require('lint').try_lint()
+endif " g:vimrc_lint
 
 " *** Keybindings
 
