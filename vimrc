@@ -64,6 +64,7 @@ let g:vimrc_copilot_lua = g:vimrc_load_nvim_plugins && 1
 let g:vimrc_copilot_vanilla = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_surround = g:vimrc_load_plugins && 1
 let g:vimrc_lint = g:vimrc_load_plugins && 1
+let g:vimrc_yanky = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -256,6 +257,9 @@ if g:vimrc_load_plugins
   if g:vimrc_lint
     Plug 'mfussenegger/nvim-lint'
   endif
+  if g:vimrc_yanky
+    Plug 'gbprod/yanky.nvim'
+  endif
 
   call plug#end()
 endif
@@ -297,6 +301,8 @@ set linebreak
 set showbreak=\ >>\ 
 
 set notagrelative
+
+set clipboard=unnamedplus
 
 if g:vimrc_undofile
   set undofile
@@ -1034,6 +1040,12 @@ EOF
 autocmd BufWritePost *.py lua require('lint').try_lint()
 endif " g:vimrc_lint
 
+if g:vimrc_yanky
+lua << EOF
+require('yanky').setup({})
+EOF
+endif " g:vimrc_yanky
+
 " *** Keybindings
 
 " Use <Space> to input commands
@@ -1299,3 +1311,20 @@ lua << EOF
   end, { silent = true })
 EOF
 endif " g:vimrc_treesitter && g:vimrc_treesitter_context
+
+if g:vimrc_yanky
+lua << EOF
+vim.keymap.set({"n","x"}, "p", "<Plug>(YankyPutAfter)")
+vim.keymap.set({"n","x"}, "P", "<Plug>(YankyPutBefore)")
+vim.keymap.set({"n","x"}, "gp", "<Plug>(YankyGPutAfter)")
+vim.keymap.set({"n","x"}, "gP", "<Plug>(YankyGPutBefore)")
+
+vim.keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
+vim.keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
+
+vim.keymap.set("n", "<Leader>p", "<Plug>(YankyPreviousEntry)")
+vim.keymap.set("n", "<Leader>n", "<Plug>(YankyNextEntry)")
+vim.keymap.set("n", "<A-p>", "<Plug>(YankyPreviousEntry)")
+vim.keymap.set("n", "<A-P>", "<Plug>(YankyNextEntry)")
+EOF
+endif " g:vimrc_yanky
