@@ -66,6 +66,7 @@ let g:vimrc_copilot_vanilla = g:vimrc_load_nvim_plugins && 0
 let g:vimrc_surround = g:vimrc_load_plugins && 1
 let g:vimrc_lint = g:vimrc_load_plugins && 1
 let g:vimrc_yanky = g:vimrc_load_plugins && 1
+let g:vimrc_nui = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -267,6 +268,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_yanky
     Plug 'gbprod/yanky.nvim'
+  endif
+  if g:vimrc_nui
+    Plug 'MunifTanjim/nui.nvim'
   endif
 
   call plug#end()
@@ -1355,6 +1359,7 @@ if g:vimrc_neotest
   nnoremap <Leader>to <Cmd>lua require("neotest").output.open()<CR>
   nnoremap <Leader>tO <Cmd>lua require("neotest").output_panel.toggle()<CR>
   nnoremap <Leader>tS <Cmd>lua require("neotest").summary.toggle()<CR>
+  nnoremap <Leader>ta <Cmd>lua require("neotest").run.attach()<CR>
 endif " g:vimrc_neotest
 
 if g:vimrc_treesitter && g:vimrc_treesitter_context
@@ -1371,9 +1376,6 @@ vim.keymap.set({"n","x"}, "p", "<Plug>(YankyPutAfter)")
 vim.keymap.set({"n","x"}, "P", "<Plug>(YankyPutBefore)")
 vim.keymap.set({"n","x"}, "gp", "<Plug>(YankyGPutAfter)")
 vim.keymap.set({"n","x"}, "gP", "<Plug>(YankyGPutBefore)")
-
-vim.keymap.set("n", "<c-p>", "<Plug>(YankyPreviousEntry)")
-vim.keymap.set("n", "<c-n>", "<Plug>(YankyNextEntry)")
 
 vim.keymap.set("n", "<Leader>p", "<Plug>(YankyPreviousEntry)")
 vim.keymap.set("n", "<Leader>n", "<Plug>(YankyNextEntry)")
