@@ -793,6 +793,25 @@ lua << EOF
     }
   })
   --
+  local python_tags_ls_id = vim.lsp.start({
+    capabilities = cmp_capabilities,
+    name = 'python_tags',
+    cmd = {'python', '/home/maniek/prg/python-tags-language-server/main.py'},
+    root_dir = vim.fs.dirname(vim.fs.find({'setup.py', 'pyproject.toml'}, { upward = true })[1]),
+    autostart = true,
+    filetypes = {'python'},
+    single_file_support = true,
+  })
+  vim.api.nvim_create_autocmd(
+    'BufReadPost',
+    {
+      pattern = '*.py',
+      callback = function(opt)
+        vim.lsp.buf_attach_client(opt.buf, python_tags_ls_id)
+      end,
+    }
+  )
+  --
   lspconfig.clangd.setup({
     capabilities = cmp_capabilities,
     cmd = { "clangd", '--background-index' }
