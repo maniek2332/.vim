@@ -878,15 +878,34 @@ EOF
   if g:vimrc_trouble
 lua << EOF
     local actions = require("telescope.actions")
-    local trouble = require("trouble.providers.telescope")
+    local action_layout = require("telescope.actions.layout")
+    local trouble = require("trouble.sources.telescope")
 
     local telescope = require("telescope")
 
     telescope.setup {
       defaults = {
+          layout_strategy = "bottom_pane",
+          layout_config = { height = 0.4 },
+          cache_picker = {
+            num_pickers = 20,
+            ignore_empty_prompt = true,
+          },
         mappings = {
-          i = { ["<F3>"] = trouble.open_with_trouble },
-          n = { ["<F3>"] = trouble.open_with_trouble },
+          i = {
+            ["<F3>"] = trouble.open,
+            ["<A-a>"] = action_layout.cycle_layout_next,
+            ["<A-s>"] = action_layout.toggle_preview,
+          },
+          n = {
+            ["<F3>"] = trouble.open,
+            ["<A-a>"] = action_layout.cycle_layout_next,
+            ["<A-s>"] = action_layout.toggle_preview,
+          },
+        },
+        cycle_layout_list = {
+          { layout_strategy = "bottom_pane", layout_config = { height = 0.85 } },
+          { layout_strategy = "bottom_pane", layout_config = { height = 0.4 } },
         },
       },
     }
@@ -1333,6 +1352,7 @@ if g:vimrc_telescope
   " Find files using Telescope command-line sugar.
   nnoremap <silent> <C-p>p <cmd>Telescope find_files<cr>
   nnoremap <silent> <C-p><C-p> <cmd>Telescope find_files<cr>
+  nnoremap <silent> <C-p>, <cmd>Telescope builtin<cr>
   nnoremap <silent> <C-p>F <cmd>Telescope live_grep<cr>
   nnoremap <silent> <C-p>b <cmd>Telescope buffers<cr>
   nnoremap <silent> <C-p>h <cmd>Telescope help_tags<cr>
@@ -1341,6 +1361,15 @@ if g:vimrc_telescope
   nnoremap <silent> <C-p>g <cmd>Telescope git_status<cr>
   nnoremap <silent> <C-p>G <cmd>Telescope git_files<cr>
   nnoremap <silent> <C-p><Enter> <cmd>Telescope resume<cr>
+  nnoremap <silent> <C-p><C-Enter> <cmd>Telescope pickers<cr>
+  nnoremap <silent> <C-p>c <cmd>Telescope git_bcommits_range<cr>
+  vnoremap <silent> <C-p>c <cmd>Telescope git_bcommits_range<cr>
+  vnoremap <silent> <C-p>q <cmd>Telescope quickfix<cr>
+  vnoremap <silent> <C-p>Q <cmd>Telescope quickfixhistory<cr>
+  vnoremap <silent> <C-p>w <cmd>Telescope loclist<cr>
+  vnoremap <silent> <C-p>o <cmd>Telescope oldfiles<cr>
+  vnoremap <silent> <C-p>m <cmd>Telescope marks<cr>
+  vnoremap <silent> <C-p>E <cmd>Telescope diagnostics<cr>
 endif " g:vimrc_telescope
 
 if g:vimrc_chadtree
