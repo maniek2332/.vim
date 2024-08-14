@@ -67,6 +67,7 @@ let g:vimrc_surround = g:vimrc_load_plugins && 1
 let g:vimrc_lint = g:vimrc_load_plugins && 1
 let g:vimrc_yanky = g:vimrc_load_plugins && 1
 let g:vimrc_nui = g:vimrc_load_plugins && 1
+let g:vimrc_neotree = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -271,6 +272,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_nui
     Plug 'MunifTanjim/nui.nvim'
+  endif
+  if g:vimrc_neotree
+    Plug 'nvim-neo-tree/neo-tree.nvim'
   endif
 
   call plug#end()
@@ -1148,6 +1152,11 @@ require('yanky').setup({})
 EOF
 endif " g:vimrc_yanky
 
+if g:vimrc_neotree
+lua << EOF
+EOF
+endif " g:vimrc_neotree
+
 " *** Keybindings
 
 " Use <Space> to input commands
@@ -1458,3 +1467,8 @@ vim.keymap.set("n", "<A-p>", "<Plug>(YankyPreviousEntry)")
 vim.keymap.set("n", "<A-P>", "<Plug>(YankyNextEntry)")
 EOF
 endif " g:vimrc_yanky
+
+if g:vimrc_neotree
+nnoremap <C--> :Neotree filesystem reveal float toggle<CR>
+nnoremap <F1> :Neotree filesystem reveal left toggle<CR>
+endif " g:vimrc_neotree
