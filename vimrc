@@ -68,6 +68,7 @@ let g:vimrc_lint = g:vimrc_load_plugins && 1
 let g:vimrc_yanky = g:vimrc_load_plugins && 1
 let g:vimrc_nui = g:vimrc_load_plugins && 1
 let g:vimrc_neotree = g:vimrc_load_plugins && 1
+let g:vimrc_markview = g:vimrc_load_plugins && 1
 
 if g:vimrc_fzf && !isdirectory($HOME . "/.fzf")
   echo "WARN: vimrc_fzf enabled but ~/.fzf is not found"
@@ -275,6 +276,9 @@ if g:vimrc_load_plugins
   endif
   if g:vimrc_neotree
     Plug 'nvim-neo-tree/neo-tree.nvim'
+  endif
+  if g:vimrc_markview
+    Plug 'OXY2DEV/markview.nvim'
   endif
 
   call plug#end()
@@ -1156,6 +1160,24 @@ if g:vimrc_neotree
 lua << EOF
 EOF
 endif " g:vimrc_neotree
+
+if g:vimrc_markview
+lua << EOF
+require("markview").setup({
+    modes = { "n", "no", "c" }, -- Change these modes
+                                -- to what you need
+    hybrid_modes = { "n" },     -- Uses this feature on
+                                -- normal mode
+    -- This is nice to have
+    callbacks = {
+        on_enable = function (_, win)
+            vim.wo[win].conceallevel = 2;
+            vim.wo[win].conecalcursor = "c";
+        end
+    }
+})
+EOF
+endif " g:vimrc_markview
 
 " *** Keybindings
 
