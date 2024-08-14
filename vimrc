@@ -796,7 +796,7 @@ lua << EOF
   local python_tags_ls_id = vim.lsp.start({
     capabilities = cmp_capabilities,
     name = 'python_tags',
-    cmd = {'python', '/home/maniek/prg/python-tags-language-server/main.py'},
+    cmd = {'python', '-m', 'tag_complete.language_server'},
     root_dir = vim.fs.dirname(vim.fs.find({'setup.py', 'pyproject.toml'}, { upward = true })[1]),
     autostart = true,
     filetypes = {'python'},
