@@ -405,8 +405,6 @@ augroup BgHighlight
   autocmd WinLeave * set nocursorline
 augroup END
 
-filetype plugin off
-filetype indent off
 
 " *** Plugins configuration
 if g:vimrc_lsp
