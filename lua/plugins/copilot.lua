@@ -13,6 +13,14 @@ return {
       suggestion = {
         enabled = true,
         auto_trigger = true,
+        keymap = {
+          accept = "<C-f>",
+          accept_word = false,
+          accept_line = false,
+          next = "<C-.>",
+          prev = "<C-,>",
+          dismiss = "<C-;>",
+        },
       },
       filetypes = {
         yaml = true,

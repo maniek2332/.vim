@@ -45,6 +45,9 @@ return {
       {
         "<C-->", "<CMD>Oil<CR>", desc="Open file explorer (Oil)",
       },
+      {
+        "<C-_>", "<CMD>Oil<CR>", desc="Open file explorer (Oil)",
+      },
     },
   },
   {

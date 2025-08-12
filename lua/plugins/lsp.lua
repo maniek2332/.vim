@@ -58,8 +58,10 @@ return {
         callback = function(args)
           vim.lsp.start({
             capabilities = cmp_capabilities,
-            name = 'python_tags',
-            cmd = {'python', '-m', 'tag_complete.language_server'},
+            -- name = 'python_tags',
+            -- cmd = {'python', '-m', 'tag_complete.language_server'},
+            name = 'import_completer',
+            cmd = {'python', '-m', 'import_completer', 'server', '-l', 'DEBUG', '-L', '/tmp/import_completer.log'},
             root_dir = vim.fs.root(args.buf, {'setup.py', 'pyproject.toml'}),
             autostart = true,
             filetypes = {'python'},
@@ -180,20 +182,20 @@ return {
     },
   },
   --
-  {
-    "nvimtools/none-ls.nvim",
-    lazy = false,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      opts.sources = {
-        nls.builtins.formatting.black,
-        nls.builtins.formatting.isort,
-        nls.builtins.diagnostics.mypy,
-      }
-      return opts
-    end,
-  },
+  -- {
+  --   "nvimtools/none-ls.nvim",
+  --   lazy = false,
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --   },
+  --   opts = function(_, opts)
+  --     local nls = require("null-ls")
+  --     opts.sources = {
+  --       nls.builtins.formatting.black,
+  --       nls.builtins.formatting.isort,
+  --       nls.builtins.diagnostics.mypy,
+  --     }
+  --     return opts
+  --   end,
+  -- },
 }
