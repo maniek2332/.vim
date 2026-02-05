@@ -8,7 +8,7 @@ return {
     event = { "BufReadPre" },
     opts = {
       events = { "InsertLeave", "BufLeave", "WinLeave", "TabLeave", "FocusLost" },
-      silent = false,
+      silent = true,
       exclude_ft = { 'neo-tree', 'oil' },
     },
   },

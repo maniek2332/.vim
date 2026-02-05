@@ -7,6 +7,7 @@
 return {
   {
     'nvim-telescope/telescope.nvim',
+    enabled = false,
     dependencies = {
       'nvim-lua/plenary.nvim',
       'folke/trouble.nvim',

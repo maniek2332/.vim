@@ -24,6 +24,17 @@ vim.o.clipboard = 'unnamedplus'
 vim.o.mousemoveevent = true
 
 vim.o.laststatus = 3
+vim.o.signcolumn = 'yes:1'
+
+vim.o.undofile = true
+
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt.foldlevel = 99
+vim.opt.foldenable = false
+
+-- Enable thin cursor in the TERMINAL buffers
+vim.o.guicursor = 'n-v-c-sm:block,i-ci-ve-t:ver25,r-cr-o:hor20'
 
 vim.api.nvim_create_autocmd(
   "FileType",
@@ -42,6 +53,17 @@ vim.api.nvim_create_autocmd(
     pattern = "python",
     callback = function(args)
       vim.bo.indentkeys = ""
+    end
+  }
+)
+
+vim.api.nvim_create_autocmd(
+  "FileType",
+  {
+    pattern = "markdown",
+    callback = function(args)
+      vim.bo.shiftwidth = 2
+      vim.bo.tabstop = 2
     end
   }
 )

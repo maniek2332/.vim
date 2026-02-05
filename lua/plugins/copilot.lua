@@ -3,10 +3,12 @@
 -- TAG:copilot.lua
 -- TAG:copilot
 -- TAG:completion
+-- URL:https://github.com/zbirenbaum/copilot.lua
 
 return {
   {
     'zbirenbaum/copilot.lua',
+    enabled = false,
     cmd = 'Copilot',
     event = 'InsertEnter',
     opts = {

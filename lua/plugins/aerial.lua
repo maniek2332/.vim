@@ -14,7 +14,7 @@ return {
     opts = {},
     keys = {
       {
-        "<leader>aa", "<cmd>AerialNavOpen<CR>",
+        "<leader>AA", "<cmd>AerialNavOpen<CR>",
         desc = "Show Aerial Nav"
       },
     },

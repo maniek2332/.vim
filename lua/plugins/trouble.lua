@@ -43,14 +43,14 @@ return {
         desc = "Quickfix List (Trouble)",
       },
       {
-        "<A-j>",
+        "<C-A-j>",
         function()
           require("trouble").next({ skip_groups = true, jump = true })
         end,
         desc = "Next Trouble",
       },
       {
-        "<A-k>",
+        "<C-A-k>",
         function()
           require("trouble").prev({ skip_groups = true, jump = true })
         end,

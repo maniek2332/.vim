@@ -2,6 +2,7 @@
 --
 -- TAG:alpha
 -- TAG:startscreen
+-- URL:https://github.com/goolord/alpha-nvim
 
 return {
   {
