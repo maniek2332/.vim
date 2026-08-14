@@ -121,6 +121,7 @@ return {
       { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
     },
     opts = {
+      terminal_cmd = "~/.local/bin/nono-claude",
       terminal = {
         provider = tmux_provider,
         -- provider = 'native',

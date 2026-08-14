@@ -14,12 +14,12 @@ return {
     config = function(_, opts)
       local lspconfig = vim.lsp.config
 
-      vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-        vim.lsp.diagnostic.on_publish_diagnostics,
-        {
-          underline = false
-        }
-      )
+      -- vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+      --   vim.lsp.diagnostic.on_publish_diagnostics,
+      --   {
+      --     underline = false
+      --   }
+      -- )
 
       --
       vim.lsp.enable('gopls')
@@ -82,6 +82,8 @@ return {
       -- local on_attach = function(client)
       --   require'completion'.on_attach(client)
       -- end
+
+      -- vim.lsp.enable('basedpyright')
 
       vim.lsp.enable('rust_analyzer')
       -- lspconfig.rust_analyzer.setup({

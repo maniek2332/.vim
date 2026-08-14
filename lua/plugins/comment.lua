@@ -5,7 +5,8 @@
 
 return {
   {
-    "numToStr/Comment.nvim",
+    -- "numToStr/Comment.nvim",
+    "neovim-plugins/comment.nvim",  -- version with the neovim 0.12 fix https://github.com/numToStr/Comment.nvim/pull/521
     opts = {},
   },
 }

@@ -11,7 +11,7 @@ return {
     enabled = true,
     config = function(_, opts)
       require('tokyonight').setup({})
-      vim.cmd([[colorscheme tokyonight-night]])
+      vim.cmd([[colorscheme tokyonight-moon]])
 
       -- TODO try to com up with a better place for configuring those colors
       vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#993939', bg = '#31353f' })

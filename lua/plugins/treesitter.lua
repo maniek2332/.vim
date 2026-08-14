@@ -12,8 +12,9 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    branch = "main",
     config = function(_, __)
-      require('nvim-treesitter.configs').setup({
+      require('nvim-treesitter').setup({
         -- A list of parser names, or "all"
         ensure_installed = { "c", "cpp", "python", "lua", "rust" },
 
@@ -44,6 +45,11 @@ return {
           enable = true,
         },
       })
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = {'python'},
+        callback = function() vim.treesitter.start() end,
+      })
     end,
   },
   {
@@ -55,9 +61,10 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
+    branch = "main",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function(_, __)
-      require('nvim-treesitter.configs').setup({
+      require('nvim-treesitter').setup({
         textobjects = {
           move = {
             enable = true,

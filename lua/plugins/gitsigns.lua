@@ -95,6 +95,12 @@ return {
         end,
         desc = "Diff this",
       },
+      {
+        "<Leader>xD", function()
+          require("gitsigns").setqflist('all')
+        end,
+        desc = "Add git changes to qflist",
+      },
     }
   },
 }

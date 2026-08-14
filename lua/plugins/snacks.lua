@@ -3,14 +3,6 @@
 -- TAG:snacks
 -- TAG:visuals
 
-local scroll_opts = {
-  enabled = true
-}
-
-local picker_opts = {
-  enabled = true,
-}
-
 local function picker_environment_files(opts)
   local path
   if vim.env.VIRTUAL_ENV then
@@ -26,20 +18,44 @@ local function picker_environment_files(opts)
   })
 end
 
+local picker_smart_opts = {
+  filter = { cwd = true },
+}
+
 return {
   {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
     ---@type snacks.Config
-    opts = {
-      scroll = scroll_opts,
-      picker = picker_opts,
-    },
+    opts = function(_, opts)
+      return vim.tbl_deep_extend("force", opts or {}, {
+        scroll = {
+          enabled = true
+        },
+        picker = {
+          actions = require("trouble.sources.snacks").actions,
+          win = {
+            input = {
+              keys = {
+                ["<a-q>"] = {
+                  "trouble_open",
+                  mode = { "n", "i" },
+                },
+                ["<a-Q>"] = {
+                  "qflist",
+                  mode = { "n", "i" },
+                },
+              },
+            },
+          },
+        },
+      })
+    end,
     keys = {
       -- File Navigation
-      { "<C-p>p", function() Snacks.picker.smart() end, desc = "Find files/buffers (smart)" },
-      { "<C-p><C-p>", function() Snacks.picker.smart() end, desc = "Find files/buffers (smart)" },
+      { "<C-p>p", function() Snacks.picker.smart(picker_smart_opts) end, desc = "Find files/buffers (smart)" },
+      { "<C-p><C-p>", function() Snacks.picker.smart(picker_smart_opts) end, desc = "Find files/buffers (smart)" },
       { "<C-p>,", function() Snacks.picker() end, desc = "Snacks builtin pickers" },
       { "<C-p>b", function() Snacks.picker.buffers() end, desc = "Pick buffers" },
       { "<C-p>o", function() Snacks.picker.recent() end, desc = "Pick from previously opened files" },
@@ -90,9 +106,9 @@ return {
       { "<C-p>n", "<CMD>Noice pick<CR>", desc = "View notifications" },
 
       -- External Tools (Snacks-only, if available)
-      { "<C-p>pr", function() Snacks.picker.gh_pr() end, desc = "GitHub pull requests" },
-      { "<C-p>is", function() Snacks.picker.gh_issue() end, desc = "GitHub issues" },
-      { "<C-p>z", function() Snacks.picker.zoxide() end, desc = "Zoxide directory navigation" },
+      -- { "<C-p>pr", function() Snacks.picker.gh_pr() end, desc = "GitHub pull requests" },
+      -- { "<C-p>is", function() Snacks.picker.gh_issue() end, desc = "GitHub issues" },
+      -- { "<C-p>z", function() Snacks.picker.zoxide() end, desc = "Zoxide directory navigation" },
 
       { "<C-p>v", picker_environment_files, desc = "Search in virtualenv files" },
     },

@@ -20,5 +20,8 @@ vim.keymap.set({"n", "t"}, "<A-\\>", function() require("smart-splits").move_cur
 
 vim.keymap.set("n", "<C-w><C-t>", function() vim.cmd('tab sb ' .. vim.api.nvim_buf_get_number(0)) end, {desc="Copy window to new tab"})
 
+-- vim.keymap.set("n", "<Tab>", ":cnext<CR>", {desc="Next item in quickfix list"})
+-- vim.keymap.set("n", "<S-Tab>", ":cprevious<CR>", {desc="Previous item in quickfix list"})
+
 vim.api.nvim_set_keymap("n", "<F5>", ':lua require("config.launchers").show_launcher()<CR>', {desc="Launcher test!"})
 vim.api.nvim_set_keymap("n", "g<F5>", ':lua require("config.launchers").show_launcher({mode = "debug"})<CR>', {desc="Launcher test!"})

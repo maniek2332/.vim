@@ -10,6 +10,14 @@ return {
   {
     "folke/trouble.nvim",
     opts = {}, -- for default options, refer to the configuration section for custom setup.
+    config = function(_, opts)
+      require("trouble").setup(opts)
+      vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+        callback = function()
+          vim.cmd([[Trouble qflist open]])
+        end,
+      })
+    end,
     cmd = "Trouble",
     keys = {
       {
@@ -43,6 +51,16 @@ return {
         desc = "Quickfix List (Trouble)",
       },
       {
+        "<leader>xs",
+        function() require("trouble").open({ mode = "snacks" }) end,
+        desc = "Open last Snacks results (content)",
+      },
+      {
+        "<leader>xS",
+        function() require("trouble").open({ mode = "snacks_files" }) end,
+        desc = "Open last Snacks results (files)",
+      },
+      {
         "<C-A-j>",
         function()
           require("trouble").next({ skip_groups = true, jump = true })
@@ -50,7 +68,21 @@ return {
         desc = "Next Trouble",
       },
       {
+        "<Tab>",
+        function()
+          require("trouble").next({ skip_groups = true, jump = true })
+        end,
+        desc = "Next Trouble",
+      },
+      {
         "<C-A-k>",
+        function()
+          require("trouble").prev({ skip_groups = true, jump = true })
+        end,
+        desc = "Previous Trouble",
+      },
+      {
+        "<S-Tab>",
         function()
           require("trouble").prev({ skip_groups = true, jump = true })
         end,

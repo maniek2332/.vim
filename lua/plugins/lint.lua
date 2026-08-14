@@ -13,8 +13,10 @@ return {
         python = { "mypy" },
         lua = { "luacheck" },
       }
-      nvim_lint.linters.mypy.cmd = "uvx"
-      nvim_lint.linters.mypy.args = { "mypy", "--show-column-numbers", "--show-error-end", "--hide-error-context", "--no-color-output", "--no-error-summary", "--no-pretty" }
+      -- nvim_lint.linters.mypy.cmd = "uvx"
+      -- nvim_lint.linters.mypy.args = { "mypy", "--show-column-numbers", "--show-error-end", "--hide-error-context", "--no-color-output", "--no-error-summary", "--no-pretty" }
+      nvim_lint.linters.mypy.cmd = "mypy"
+      nvim_lint.linters.mypy.args = { "--show-column-numbers", "--show-error-end", "--hide-error-context", "--no-color-output", "--no-error-summary", "--no-pretty" }
 
       vim.api.nvim_create_autocmd(
         "BufWritePost",
