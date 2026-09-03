@@ -41,7 +41,7 @@ return {
         vim.lsp.enable('jedi_language_server')
       end
 
-      if vim.env.NVIM_LSP_ZUBAN ~= 'off' then
+      if vim.env.NVIM_LSP_ZUBAN == 'on' then
         vim.lsp.enable('zuban')
         vim.lsp.config['zuban'] = vim.tbl_deep_extend('force', vim.lsp.config['zuban'], {
             root_dir = vim.env.NVIM_PROJECT_ROOT or nil,

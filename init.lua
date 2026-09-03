@@ -94,3 +94,5 @@ require("config.lazy")
 require("config.launchers")
 require("config.mappings")
 
+require("config.rpc_server").start()
+

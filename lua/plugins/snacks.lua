@@ -31,7 +31,7 @@ return {
     opts = function(_, opts)
       return vim.tbl_deep_extend("force", opts or {}, {
         scroll = {
-          enabled = true
+          enabled = false
         },
         picker = {
           actions = require("trouble.sources.snacks").actions,
